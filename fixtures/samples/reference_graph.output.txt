@@ -1,0 +1,45 @@
+== Catalog cat-v1  hash 32978f4b386ea7ce1fdf1018f67633def259d08808c501cdedea84c849197e8d
+courses 40 (published 36, draft 2, retired 2); edges 56; publish check ACCEPT; cycles 0
+topological order (G4): ACC-100 ACC-101 ACC-102 ACC-201 ACC-202 ACC-301 ACC-303 DAT-101 DAT-102 DAT-201 DAT-202 DAT-301 DAT-303 MGT-101 MGT-201 ACC-302 ACC-401 MGT-202 DAT-302 DAT-401 MGT-301 MGT-302 MGT-401 PRJ-101 PRJ-201 PRJ-202 PRJ-301 SEC-100 SEC-101 SEC-201 SEC-202 SEC-301 SEC-302 SEC-401 WRT-101 PRJ-302 PRJ-401 WRT-201 WRT-202 WRT-301
+
+== Draft edits against cat-v1
+edit   result                     detail
+E-01   REJECT:CYCLE               CYCLE: ACC-101 -> ACC-201 -> ACC-101
+E-02   REJECT:CYCLE               CYCLE: MGT-101 -> MGT-201 -> MGT-301 -> MGT-101
+E-03   REJECT:CYCLE               CYCLE: SEC-202 -> SEC-202
+E-04   ACCEPT                     grandfathered 17 (WRT-202)
+E-05   REJECT:PREREQ_UNPUBLISHED  PREREQ_UNPUBLISHED: DAT-401 requires DAT-303 (DRAFT)
+E-06   REJECT:CYCLE               CYCLE: ACC-301 -> ACC-401 -> ACC-301
+E-07   ACCEPT                     grandfathered 0
+E-08   REJECT:PREREQ_UNKNOWN      PREREQ_UNKNOWN: PRJ-301 requires unknown PRJ-999
+E-09   REJECT:PREREQ_DEPTH        PREREQ_DEPTH: SEC-301: group nested deeper than 2
+E-10   REJECT:PREREQ_EMPTY_GROUP  PREREQ_EMPTY_GROUP: MGT-202: empty any group
+E-11   ACCEPT                     grandfathered 6 (ACC-202)
+E-12   REJECT:PREREQ_UNPUBLISHED  PREREQ_UNPUBLISHED: PRJ-302 requires WRT-101 (RETIRED); PREREQ_UNPUBLISHED: WRT-201 requires WRT-101 (RETIRED); PREREQ_UNPUBLISHED: WRT-202 requires WRT-101 (RETIRED)
+E-13   REJECT:CYCLE               CYCLE: DAT-201 -> DAT-202 -> DAT-201
+E-14   REJECT:CYCLE               CYCLE: ACC-101 -> ACC-202 -> ACC-101; CYCLE: WRT-101 -> WRT-201 -> WRT-101
+E-15   ACCEPT                     grandfathered 0; courses 40 -> 41
+accepted 4, rejected 11, cycle rejections 6
+
+== Eligibility of 300 learners over the published courses
+status counts: COMPLETED 1140, ELIGIBLE 2613, BLOCKED 7047, UNAVAILABLE 0 (total 10800 = 300 x 36)
+blocked by missing-set size: 1: 3948, 2: 3099
+leaf satisfactions not by PASS (G6): EQUIVALENT 43, WAIVER 43
+eligible-course count per learner: 5: 1, 6: 2, 7: 32, 8: 121, 9: 76, 10: 39, 11: 22, 12: 3, 13: 4
+
+== Certificate progress (derived) and shortest path to the target certificate (G8)
+progress buckets: 0-24% 125, 25-49% 36, 50-74% 29, 75-99% 40, 100% 70
+shortest-path length: 0: 70, 1: 40, 2: 33, 3: 39, 4: 47, 5: 36, 6: 14, 7: 6, 8: 6, 9: 9; max branch combinations examined 16
+  CERT-ANALYST   learners  43  complete   8  mean progress_bp 4372
+  CERT-BOOK      learners  51  complete  22  mean progress_bp 6862
+  CERT-DATA-ADV  learners  48  complete   0  mean progress_bp 0
+  CERT-LEAD      learners  45  complete  11  mean progress_bp 4277
+  CERT-PM        learners  39  complete   6  mean progress_bp 3641
+  CERT-SEC       learners  43  complete  14  mean progress_bp 6046
+  CERT-WRITE     learners  31  complete   9  mean progress_bp 5080
+
+== Drip release (R1-R3) and derived course progress
+item completion events 2051: ACCEPT 1885, REJECT:NOT_ENROLLED 12, REJECT:NOT_RELEASED 154
+enrollments 341; course progress buckets: 0-24% 9, 25-49% 79, 50-74% 157, 75-99% 90, 100% 6
+
+wrote expected_edits.csv, expected_eligibility.csv, expected_progress.csv, expected_drip.csv, expected_enrollment_progress.csv

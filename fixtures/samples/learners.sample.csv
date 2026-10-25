@@ -1,0 +1,13 @@
+learner_id,name,email,target_certificate,enrolled_catalog_version
+L-0001,Nadia Mensah,nadia.mensah1@example.org,CERT-WRITE,cat-v1
+L-0002,Hiro Garcia,hiro.garcia2@example.org,CERT-SEC,cat-v1
+L-0003,Ximena Singh,ximena.singh3@example.org,CERT-LEAD,cat-v1
+L-0004,Carla Alvarez,carla.alvarez4@example.org,CERT-LEAD,cat-v1
+L-0005,Lena Evans,lena.evans5@example.org,CERT-WRITE,cat-v1
+L-0006,Wen Dubois,wen.dubois6@example.org,CERT-ANALYST,cat-v1
+L-0007,Ben Kim,ben.kim7@example.org,CERT-LEAD,cat-v1
+L-0008,Marco Ueda,marco.ueda8@example.org,CERT-WRITE,cat-v1
+L-0009,Carla Dubois,carla.dubois9@example.org,CERT-DATA-ADV,cat-v1
+L-0010,Sven Tanaka,sven.tanaka10@example.org,CERT-BOOK,cat-v1
+L-0011,Wen Patel,wen.patel11@example.org,CERT-PM,cat-v1
+L-0012,Dmitri Alvarez,dmitri.alvarez12@example.org,CERT-BOOK,cat-v1

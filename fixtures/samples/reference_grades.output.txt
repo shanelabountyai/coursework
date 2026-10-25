@@ -1,0 +1,14 @@
+== Grade schemes (S1 publish check)
+SCH-BAD   weights  9900  REJECT:WEIGHTS_SUM  [('WEIGHTS_SUM', 'weights sum to 9900, not 10000')]
+SCH-LITE  weights 10000  ACCEPT
+SCH-STD   weights 10000  ACCEPT
+
+== Gradebook per graded cohort (scores in hundredths of a percent; rounded once, half-up, at the final grade)
+cohort         scheme      n  mean_hp  pass  fail  letters                flags
+C-ACC101-F26   SCH-STD    28     7671    17    11  A:6 B:6 C:5 D:8 F:3    DROPPED:56 EC_CAPPED:6 LATE:41 MISSING_ZERO:16 PENALTY_FLOORED:3
+C-DAT102-F26   SCH-STD    26     7292    14    12  A:6 B:4 C:4 D:5 F:7    DROPPED:52 EMPTY_CATEGORY:26 LATE:25 MISSING_ZERO:27
+C-MGT101-F26   SCH-STD    26     7206    14    12  A:4 B:3 C:7 D:5 F:7    DROPPED:52 LATE:33 MISSING_ZERO:24
+C-WRT101-F26   SCH-LITE   26     7636    22     4  A:4 B:6 C:7 D:6 F:3    DROPPED:26 EC_CAPPED:7 EMPTY_CATEGORY:7 LATE:34
+learners graded 106; unrounded grade within 0.5 hp of the pass threshold (rounding decides): 0
+
+wrote expected_schemes.csv, expected_grades.csv

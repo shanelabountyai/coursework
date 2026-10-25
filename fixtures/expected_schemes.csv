@@ -1,0 +1,4 @@
+scheme,weights_bp,result,errors
+SCH-BAD,9900,REJECT:WEIGHTS_SUM,"WEIGHTS_SUM:weights sum to 9900, not 10000"
+SCH-LITE,10000,ACCEPT,
+SCH-STD,10000,ACCEPT,
