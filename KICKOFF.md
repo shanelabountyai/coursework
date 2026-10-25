@@ -10,13 +10,13 @@ Read, in order, from the kit: CLAUDE.md, prd-coursework.md, docs/decisions.md
 (authoritative), docs/domain-brief.md, docs/portfolio-overlap.md, docs/phase-1-tasks.md.
 
 Steps, in order:
-1. Port check. The port table in ~/.claude/CLAUDE.md is not reachable from here. Use 6400
-   as proposed (D-5) and write "port 6400 unverified against the port table; Shane confirms"
+1. Port check. The port table in ~/.claude/CLAUDE.md is not reachable from here. Use 7400
+   as proposed (D-5) and write "port 7400 unverified against the port table; Shane confirms"
    in NEXT.md. Do not pick another port yourself.
 2. Clone the template with shared history (NOT the GitHub template button):
      git clone https://github.com/shanelabountyai/saas-foundation.git coursework
      cd coursework && git remote rename origin template && git checkout -B main v1.3.0
-     npm ci && npm run new-project -- coursework 6400
+     npm ci && npm run new-project -- coursework 7400
    Do not run new-project twice. Copy the kit in: CLAUDE.md, KICKOFF.md, NEXT.md,
    prd-coursework.md, docs/*.md, tools/*.py, fixtures/samples/, .claude/settings.json
    (merge the model pin; keep anything the template put there). Add the scope-honesty
@@ -24,7 +24,7 @@ Steps, in order:
 3. Add the clone row to saas-foundation/CLONES.md in a separate clone of the template
    (v1.3.0, 2026-10-25, "course platform: prerequisite DAG with cycle detection, derived
    progress, exact weighted gradebook, drip release; synthetic only; not deployed; public;
-   port 6400; tools/, fixtures/ clone-owned") and open it as a PR against the template —
+   port 7400; tools/, fixtures/ clone-owned") and open it as a PR against the template —
    do not merge. Put ?connection_limit=10&pool_timeout=20 on the local DATABASE_URLs.
    Confirm vercel.json has the house ignoreCommand. Keep notifications; remove or unwire
    billing and share links per D-2 and record which path foundation:check-modules allowed.
@@ -75,7 +75,7 @@ number; never merge a PR.
 ## Still to do by hand (Shane)
 
 - Create the **public** GitHub repo `shanelabountyai/coursework` (empty) before the session so step 8 can push; or give the session a token scoped to create it. Before the first push: `git ls-files | grep -iE "\.env|secret|credential|\.pem$|\.key$"` (only `.env.example` may appear); confirm `.gitignore` covers `.env` and `.env*.local`.
-- Confirm port 6400 against the port table in `~/.claude/CLAUDE.md` and add the row; merge the CLONES.md PR on the template.
+- Confirm port 7400 against the port table in `~/.claude/CLAUDE.md` and add the row; merge the CLONES.md PR on the template.
 - Build-log card #15: name **Coursework**, PRD and repo links, status `in progress`, chips per `docs/portfolio-overlap.md` "Suggested card chips".
 - Review the Phase 1 plan in the PR; reply with go / changes. Decide O-1..O-9 when they come up; defaults are in force.
 - Neon and Vercel only if this is ever deployed (not planned; synthetic data).

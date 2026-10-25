@@ -1,7 +1,7 @@
 import { defineConfig } from '@playwright/test';
 
 // Template port (see ~/.claude/CLAUDE.md port table). Clones get their own via new-project.
-const PORT = Number(process.env.PORT ?? 6400);
+const PORT = Number(process.env.PORT ?? 7400);
 
 export default defineConfig({
   testDir: 'e2e',
