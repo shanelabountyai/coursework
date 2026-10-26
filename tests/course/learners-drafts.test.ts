@@ -91,6 +91,8 @@ describe('D-52 drafts', () => {
     await expect(publishDraft(actor, 'cat-v2')).rejects.toThrow('There is no draft to publish.');
     await saveDraft(actor, { baseVersionId: s.version.id, ops: [{ op: 'set_status', course: 'ACC-201', status: 'PUBLISHED' }] });
     await expect(publishDraft(actor, 'cat-v2')).rejects.toThrow('A version named cat-v2 already exists.');
+    await expect(publishDraft(actor, 'cat-v3')).rejects.toThrow('The draft changes nothing in cat-v1.'); // ACC-201 is already PUBLISHED
+    expect(await db.publishAttempt.count()).toBe(2);
     await expect(publishDraft(actor, 'bad label!')).rejects.toThrow(/version name/);
   });
 });
