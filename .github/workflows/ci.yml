@@ -54,6 +54,9 @@ jobs:
       - run: npm run fixtures:check
       - run: createdb coursework_test
       - run: npx prisma migrate deploy
+      # Phase 2 (task 2.11): the clone's migration SQL is hand-written (the sandbox has no schema engine), so
+      # prove the applied database equals the Prisma schema — any column, index or FK the SQL got wrong fails here.
+      - run: npx prisma migrate diff --from-url "$DATABASE_URL" --to-schema-datamodel prisma/schema --exit-code
       - run: npx vitest run
       # Production build, served — the way it ships. login.spec.ts drives a real page.
       - run: npx playwright install --with-deps chromium
