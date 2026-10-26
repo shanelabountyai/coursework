@@ -13,7 +13,8 @@ import { STATUSES, type Expr, type Status } from '@/graph/types';
 import type { Actor } from './actor';
 import { assertWritable } from './archive';
 import { publishEdit, type PublishResult } from './publish';
-import { loadVersion, type Tx } from './versions';
+import { contentOf, loadVersion, type Tx } from './versions';
+import { catalogHash } from '@/graph/canonical';
 
 export const MAX_OPS = 50;
 const CODE = /^[A-Z]{2,5}-\d{3}$/;
@@ -121,6 +122,8 @@ export async function publishDraft(actor: Actor, label: string): Promise<Publish
   if (!ops.length) throw new Refused('The draft has no changes.');
   if (await db.catalogVersion.findUnique({ where: { orgId_label: { orgId: actor.orgId, label } } })) throw new Refused(`A version named ${label} already exists.`);
   const edit: DraftEdit = { id: `DRAFT-${draft.id.slice(0, 8)}`, ops };
+  const { row: base, catalog } = await loadVersion(draft.baseVersionId);
+  if (catalogHash(contentOf(applyEdit(catalog, edit))) === base.hash) throw new Refused(`The draft changes nothing in ${base.label}.`);
   const result = await publishEdit(actor, draft.baseVersionId, edit, label);
   if (result.version) await db.catalogDraft.deleteMany({ where: { id: draft.id } });
   return result;
