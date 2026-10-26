@@ -1,6 +1,44 @@
 # NEXT
 
-## ▶ State: Phase 2 complete on branch `kickoff` (PR #1, never merged). Stopped at the Phase 2 gate for review.
+## ▶ State: decisions pass applied (D-51..D-56) and Phase 3 built on branch `kickoff` (PR #1, never merged). Stopped at the Phase 3 gate; `docs/CLOSEOUT.md` is the draft closeout (the PRD has no Phase 4).
+
+Unattended cloud session, 2026-10-26 (PHASE3-BRIEF, model `claude-opus-5-5`; commit attribution changed to Opus 5.5 as the brief says). **No fixture regeneration**: none of the owner's Coursework decisions (kit items 12–17) changes a rule, a golden case or a fixture; `fixtures/` and the brief §9 hashes are untouched.
+
+### Decisions applied
+
+D-51 learner link (explicit, audited, one per user per org) · D-52 stored `CatalogDraft` per editor · D-53 roles (publish = `org.update`, scores = `results.write`, item completion = the linked learner) · D-54 billing removed by the manifest + `DROP TABLE` migration (supersedes D-34/D-44) · D-55 D-46 confirmed · D-56 `OrgArchive` (insert-only), archived-write guard in all 18 writers + trigger on 13 tables, delete-org refused by the clone hook (closes the D-45 seam). Session defaults D-57 (the one instant→day module, `America/Chicago`), D-58 (`/orgs` hides archived; `/onboarding` seam), D-59 (axe-core from node_modules via one helper), D-60 (current version = newest), D-61 (e2e org per run + a 2099 cohort), D-62 (archive needs a fresh non-demo sign-in), D-63 (not-yours = notFound), D-64 (3.9 outbox dropped).
+
+### Re-proved before any Phase 3 code (locally, then CI run 40345313191 green)
+
+`course:eval` 7/7 files 0 diffs (15 + 10,800 + 300 + 2,051 + 341 + 3 + 106 rows); `progress:verify` 341 + 300, 0 diffs; `fixtures:check` OK; `npm test` 294 / 46 files; `seed:fixtures` 40/7/2/3/300/24/1,352/16/341/2,051 (1,885 + 166)/35/806 in 21 s; `progress:verify --db` 0 diffs.
+
+### Phase 3 (docs/phase-3-tasks.md: 3.0–3.8 done, 3.9 dropped)
+
+- Pages: `/o/[org]` home, `catalog` (editor with live in-browser G1–G5), `catalog/versions`, `learners`, `learners/[code]`, `me`, `cohorts`, `cohorts/[code]/grades`, `cohorts/[code]/drip`, `archive`; `/orgs`. Nine server actions through `orgAction`.
+- Local gate at the head: `lint` 0 problems, `typecheck`, `engine:lint` (13 engine / 82 clone files), `foundation:drift` clean (modules removed: billing), `npm test` **299 tests / 47 files**, e2e **16 passed of 16 listed** (7 new), axe 0 violations in light and dark.
+- Acceptance numbers on the fixture school: E-01 `ACC-101 -> ACC-201 -> ACC-101`, Publish disabled; E-04 → 17 grandfathered; L-0001 `WRT-201, WRT-301`, 50.00%; L-0076 69.60 D fail `DROPPED:HW:HW1`, exact `6960/1`; L-0003 4 of 9 → 5 of 9 after completing A01.
+
+### CI runs this session
+
+| Run | Head | Result | What |
+|---|---|---|---|
+| https://github.com/shanelabountyai/coursework/actions/runs/40344199829 | 9337fba | green | decisions doc + billing removal |
+| https://github.com/shanelabountyai/coursework/actions/runs/40345313191 | 532bc69 | green | archive, learner link, drafts, today; Phase 1/2 proofs re-run in CI |
+| https://github.com/shanelabountyai/coursework/actions/runs/40351666361 | aefd586 | green | Phase 3: pages, actions, e2e with axe (no red runs this session) |
+
+### What the sandbox could and could not run
+
+- **Could:** everything except Prisma's schema engine — client generated with `PRISMA_SCHEMA_ENGINE_BINARY=/bin/true npx prisma generate` (D-47), migrations applied with `psql -f` in order, full `npm test`, `next build`, and **Playwright e2e** (Chromium 1243 is preinstalled at `/opt/pw-browsers`; the download is skipped by `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1`).
+- **Could not:** `prisma migrate deploy/diff/validate` (schema engine 403). CI's `migrate diff` is the only proof the two new hand-written migrations equal the schema — it was green.
+
+### What Shane needs to do
+
+See `docs/CLOSEOUT.md` "By hand": review D-51..D-64 and the Phase 3 status table; push the `v1.3.0` tag and un-pin drift (D-41); upstream an org-list hook for `/onboarding` (D-58); declare `axe-core` as a devDependency (D-59); confirm port 7400 and the CLONES.md row; PRD P0-3 sentence; O-9 if wanted.
+
+## Phase 2 handoff (2026-10-26), kept as written
+
+
+### State then: Phase 2 complete on branch `kickoff` (PR #1, never merged). Stopped at the Phase 2 gate for review.
 
 Unattended cloud build session, 2026-10-26 ("Go phase 2"), model `claude-fable-5-1`, after the Phase 1 session of 2026-10-25/26 (its handoff is kept below). Everything is on `origin/kickoff`; PR #1 (`kickoff` → `main`, https://github.com/shanelabountyai/coursework/pull/1) is the CI trigger and stays open. **Phase 3 is not started**: `docs/phase-3-tasks.md` is a draft for review. **Port 7400 still unverified** (D-33).
 

@@ -18,6 +18,7 @@ Learning project, synthetic data only. Every learner, completion, score and cour
 | `npm run fixtures:check` | `verify_fixtures.py` OK + `golden_answers.py` OK + clean `fixtures/` tree |
 | `npm run engine:lint` | D-7 purity of `src/graph/` and `src/grades/`, no float on the score path, the D-8 date bans over clone-owned code |
 | `npm run test:engine` | the pure engine tests only (`tests/engine/`); needs no database |
+| `npm run seed:school` | Phase 3 demo school: `fixtures/` through the write paths plus one demo user per role (`owner@demo-school.demo.test`, `admin@…`, `scorekeeper@…`, `learner@…` linked to L-0003, `member@…`); sign in at `/demo` with `DEMO_MODE=1` |
 
 ## Template README (saas-foundation v1.3.0)
 
