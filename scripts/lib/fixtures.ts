@@ -91,7 +91,7 @@ export function loadFixtures(dir = 'fixtures'): Fixtures {
   const completions = csv('completions.csv').map((r, i) => {
     const kind = need(r, 'kind', `completions.csv:${i + 2}`);
     if (kind !== 'PASS' && kind !== 'FAIL') throw new Error(`completions.csv:${i + 2}: kind ${kind}`);
-    return { learner_id: need(r, 'learner_id', 'completions'), course: need(r, 'course', 'completions'), kind, day: need(r, 'day', 'completions'), catalog_version: need(r, 'catalog_version', 'completions') };
+    return { learner_id: need(r, 'learner_id', 'completions'), course: need(r, 'course', 'completions'), kind: kind as 'PASS' | 'FAIL', day: need(r, 'day', 'completions'), catalog_version: need(r, 'catalog_version', 'completions') };
   });
   return {
     dir,
