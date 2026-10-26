@@ -60,7 +60,7 @@ jobs:
       # through the API but not job logs.
       - run: |
           set +e
-          npx prisma migrate diff --from-url "$DATABASE_URL" --to-schema-datamodel prisma/schema --exit-code --script > migrate-diff.sql 2>&1
+          npx prisma migrate diff --from-config-datasource --to-schema prisma/schema --exit-code --script > migrate-diff.sql 2>&1
           rc=$?
           if [ $rc -ne 0 ]; then echo "::error::migrate diff rc=$rc: $(head -c 3500 migrate-diff.sql | tr '\n' ' ')"; cat migrate-diff.sql; exit 1; fi
       - run: npx vitest run
