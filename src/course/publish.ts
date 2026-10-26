@@ -1,8 +1,8 @@
 /**
  * Publishing through the engine (G5, G9, V1; task 2.4). THE ONLY MODULE THAT INSERTS A CatalogVersion
  * (CLAUDE.md non-negotiable 1): `insertVersion` below is private and takes the engine's `ACCEPT`
- * check as an argument, and tests/course/publish.test.ts greps the tree for any other
- * `catalogVersion.create`. A refused edit writes a PublishAttempt and nothing else; an accepted one
+ * check as an argument, and tests/course/publish.test.ts greps src/ and scripts/ for any other
+ * Prisma create call on the model. A refused edit writes a PublishAttempt and nothing else; an accepted one
  * writes the attempt, the version and the G9 report in one transaction, and flags the grandfathered
  * enrollments (V3).
  */

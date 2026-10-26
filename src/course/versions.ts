@@ -8,7 +8,7 @@ import { catalogHash } from '@/graph/canonical';
 import type { Catalog } from '@/graph/types';
 
 export type Tx = Prisma.TransactionClient;
-export type VersionRow = { id: string; orgId: string; label: string; hash: string; content: Prisma.JsonValue };
+export type VersionRow = { id: string; orgId: string; label: string; hash: string; content: Prisma.JsonValue; parentId: string | null };
 
 export type CatalogContent = Pick<Catalog, 'courses' | 'equivalencies' | 'certificates'>;
 
