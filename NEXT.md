@@ -28,7 +28,7 @@ Unattended cloud build session, 2026-10-25/26, model `claude-fable-5-1`. Everyth
 | https://github.com/shanelabountyai/coursework/actions/runs/40261465771 | 0a6503b | **red, but for the wrong reason** | first 1.12 attempt: the flip was right but its comment held `1.12`, which `engine:lint`'s decimal-literal grep under `src/grades/` caught before `course:eval` ran. The lint reads comments too — by design, it is a grep. Redone below |
 | https://github.com/shanelabountyai/coursework/actions/runs/40261661360 | 4965a52 | green | revert of the first flip + Phase 1 gate docs |
 | https://github.com/shanelabountyai/coursework/actions/runs/40261702476 | cf25905 | **red on purpose at `course:eval`** | task 1.12 proof: S5 tie order flipped (lint-clean comment), GS-03 9233 → 9250, 15 grade rows diverge; `engine:lint` passed, `course:eval` failed |
-| (next run on this branch) | revert of cf25905 | green expected | task 1.12 green half — Shane: confirm on PR #1 |
+| https://github.com/shanelabountyai/coursework/actions/runs/40261927041 | 93c3bbe | green | revert of cf25905 + run links; the Phase 1 head |
 
 ### What the sandbox could not run (D-4: CI is the gate)
 
