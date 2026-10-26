@@ -72,7 +72,6 @@ The PRD leaves several rules open. The golden cases and measurements in `docs/do
 | O-6 | Empty-category redistribution (D-27) vs. "empty category contributes 0" vs. "grade withheld until the category has work" | Redistribute | Withholding is the most honest for a cohort mid-term; redistribution matches what a final transcript does |
 | O-7 | Re-evaluating all learners against a new catalog version on publish (P2) | Explicit action, not automatic | Automatic re-evaluation is what turns a catalog tweak into 300 silent eligibility changes |
 | O-8 | Rounding at the category level for display | Never for computation; display may show two decimals of the exact rational | A learner who sees 69.99 on screen and FAIL at 70.00 will ask; the screen must show the exact fraction on request |
-| O-9 | Notifications outbox for unlock notices (D-22) | Kept, optional in Phase 3 | If Phase 3 runs short it is the first thing to drop |
 
 ## Not modeled (seams only)
 
@@ -151,3 +150,9 @@ Defaults the build session took while applying D-51..D-56 and building Phase 3; 
 | D-62 | **Archiving needs a fresh, non-demo sign-in** (`assertFresh`, as the template's delete-org), because it cannot be undone. A demo owner therefore sees the refusal sentence; the archive and delete-org refusals themselves are proved in vitest (`tests/course/archive.test.ts`, `tests/course/actions.test.ts`). | D-56 is irreversible |
 | D-63 | **Not-yours is not-found in every Phase 3 action and page.** A cross-org or missing id calls `notFound()` before any write (INV-02/04 accept only a guard/notFound refusal, not a returned `{error}`); a member asking for another learner's page, a cohort she is not in, or a staff screen gets a 404. Domain refusals (a cycle, an archived org, a duplicate score) are sentences. | Template INV-04 |
 | D-64 | **3.9 outbox unlock notices dropped** (O-9 stays open, default "kept, optional"): the first item to drop if time is short, per the task list. Nothing is queued; nothing is sent. | Phase 3 task list |
+
+## Owner decision — 2026-10-26 (Shane, after the Phase 3 gate)
+
+| # | Decision | Why |
+|---|---|---|
+| D-65 | **O-9 closed: unlock notices are not built.** D-64's drop stands; nothing is queued for drip unlocks. The outbox pattern is shown in Quorum and Ledgerleave, where notices are part of the workflow. | Owner decision |
