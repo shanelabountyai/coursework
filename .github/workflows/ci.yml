@@ -55,8 +55,6 @@ jobs:
       - run: createdb coursework_test
       - run: npx prisma migrate deploy
       # Phase 2 (task 2.11): the clone's migration SQL is hand-written (the sandbox has no schema engine), so
-      # prove the applied database equals the Prisma schema — any column, index or FK the SQL got wrong fails here.
-      # Phase 2 (task 2.11): the clone's migration SQL is hand-written (the sandbox has no schema engine), so
       # prove the applied database equals the Prisma schema — any column, index or FK the SQL got wrong fails
       # here. The output goes into the error annotation too: the cloud build session can read annotations
       # through the API but not job logs.
