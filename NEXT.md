@@ -1,8 +1,40 @@
 # NEXT
 
-## ▶ State: Phase 1 complete on branch `kickoff` (PR #1, never merged). Stopped at the Phase 1 gate for review.
+## ▶ State: Phase 2 complete on branch `kickoff` (PR #1, never merged). Stopped at the Phase 2 gate for review.
 
-Unattended cloud build session, 2026-10-25/26, model `claude-fable-5-1`. Everything is on `origin/kickoff`; PR #1 (`kickoff` → `main`, https://github.com/shanelabountyai/coursework/pull/1) is the CI trigger and stays open. **Phase 2 is not started**: `docs/phase-2-tasks.md` is a draft for review. **Port 7400 unverified against the port table; Shane confirms** (D-33).
+Unattended cloud build session, 2026-10-26 ("Go phase 2"), model `claude-fable-5-1`, after the Phase 1 session of 2026-10-25/26 (its handoff is kept below). Everything is on `origin/kickoff`; PR #1 (`kickoff` → `main`, https://github.com/shanelabountyai/coursework/pull/1) is the CI trigger and stays open. **Phase 3 is not started**: `docs/phase-3-tasks.md` is a draft for review. **Port 7400 still unverified** (D-33).
+
+### Phase 2 numbers (D-31: oracle agreement on the generator's own data, through the database this time)
+
+- `seed:fixtures` (through the write paths, every row through an engine): catalog `cat-v1` hash `32978f4b…`, 40 courses / 7 certificates / 2 equivalencies, 3 schemes (2 ACCEPT, `SCH-BAD` stored DRAFT), 300 learners, 24 waivers, 1,352 completion events (1,164 PASS), 16 cohorts, 341 enrollments, 2,051 item events → **1,885 `ItemCompletion` rows + 166 `item.refused` audit rows** (154 NOT_RELEASED, 12 NOT_ENROLLED), 35 assignments, 806 submissions; 2,629 audit rows across 11 actions, none without an actor; 22 s locally.
+- From the database rows, 0 diffs against the oracle: eligibility **10,800** rows, certificate progress + paths **300**, enrollment progress **341**, grades **106** (`tests/course/fixtures-db.test.ts`; `progress:verify --db` 0 diffs, also a CI step).
+- E-01..E-15 through the live book: 15 attempts, 4 versions, verdicts and cycle paths equal `expected_edits.csv`; E-04 flags 17 enrollments and E-11 6, all still `IN_PROGRESS` (V3).
+- Tamper: UPDATE and DELETE refused on all 5 append-only tables (Prisma and raw SQL); a planted `Enrollment.progressBp` column fails the schema test; one `ItemCompletion` deleted with the trigger disabled is exactly one diff (4 → 3 of 9, 4444 → 3333).
+- Local gate: `lint` (1 template warning), `typecheck`, `engine:lint` clean (13 engine files, 55 clone files), `foundation:drift` clean, `npm test` **295 tests / 45 files** (Phase 1: 268 / 40), `course:eval` and `progress:verify` unchanged (0 diffs).
+
+### What Shane needs to do
+
+1. **Review** `docs/phase-2-tasks.md` (status table at the bottom: where the build departed from the draft) and decisions **D-42..D-50**; then `docs/phase-3-tasks.md` (draft; three open questions at the bottom). Reply go / changes.
+2. **D-45 seam**: an org with catalog history cannot be deleted through `deleteOrg` (Restrict FKs into append-only tables). Decide for Phase 3: archive, or allow the delete inside `deleteOrg` only.
+3. **D-46**: a refused item completion is an audit row and no table row (PRD P0-6 wording). If you want refused rows in `ItemCompletion` instead (the draft 2.5 wording), say so — the engine call is the same; only the write changes.
+4. Still open from Phase 1: push the `v1.3.0` tag and un-pin `foundation:drift` in CI (D-41); `CLONES.md` row; PRD P0-3 drip-order sentence; confirm port 7400.
+
+### CI runs this session (the gate)
+
+| Run | Head | Result | Why |
+|---|---|---|---|
+| https://github.com/shanelabountyai/coursework/actions/runs/40319180795 | 527f082 | **red** at `migrate diff` | the step used Prisma 6 flags (`--from-url`), which Prisma 7 removed; logs are unreadable from the cloud, so the next two pushes made the step print its output into an error annotation (readable through the API) |
+| https://github.com/shanelabountyai/coursework/actions/runs/40320245350 | 1d87c91 | **red** at `migrate diff` | same cause; the PR-comment diagnostic did not post (token) |
+| https://github.com/shanelabountyai/coursework/actions/runs/40320706824 | 03cb04a | **red** at `migrate diff` | same cause, now with the message in the annotation: `--from-url was removed` |
+| https://github.com/shanelabountyai/coursework/actions/runs/40321125370 | e66d14d | **green** | flags fixed (`--from-config-datasource --to-schema prisma/schema`); the whole Phase 2 tree: migrate diff empty (hand-written SQL = schema), 295 vitest tests, Playwright |
+| (see the Phase 2 gate commit) | HEAD | recorded in the follow-up commit | 2.11 CI seed + `progress:verify --db` steps, docs, Phase 3 draft |
+
+### What the sandbox could and could not run (D-47)
+
+- **Could, this time:** `PRISMA_SCHEMA_ENGINE_BINARY=/bin/true npx prisma generate` generates the client without the engine download, so `npm run typecheck` and the **full** `npm test` ran locally against a local Postgres 16 (started with `service postgresql start`; migrations applied in order with `psql -f` from a scratchpad script, since `prisma migrate deploy` needs the schema engine). `.env.test` / `.env.local` written locally (gitignored).
+- **Could not:** `prisma migrate deploy`, `migrate diff`, `migrate dev --create-only` (403 on `binaries.prisma.sh`, verbatim error in the Phase 1 section below). The migration SQL is hand-written; **CI's `migrate diff` is the only proof it equals the schema**. Playwright not attempted locally. CI job logs still unreadable (`Forbidden` on the blob URL); annotations are readable, so failing steps now put their output there.
+
+## Phase 1 handoff (2026-10-25/26), kept as written
 
 ### Numbers (D-31: oracle agreement on the generator's own data, not a product claim)
 
