@@ -33,6 +33,8 @@
     "seed:demo:test": "dotenv -e .env.test -e .env.local -- tsx scripts/seed-demo.ts",
     "seed:fixtures": "dotenv -e .env.local -- tsx scripts/seed-fixtures.ts",
     "seed:fixtures:test": "dotenv -e .env.test -e .env.local -- tsx scripts/seed-fixtures.ts",
+    "seed:school": "dotenv -e .env.local -- tsx scripts/seed-school.ts",
+    "seed:school:test": "dotenv -e .env.test -e .env.local -- tsx scripts/seed-school.ts",
     "progress:verify:db": "dotenv -e .env.test -e .env.local -- tsx scripts/progress-verify.ts --db",
     "db:setup": "tsx scripts/db-setup.ts",
     "new-project": "tsx scripts/new-project.ts",
