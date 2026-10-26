@@ -25,8 +25,10 @@ Unattended cloud build session, 2026-10-25/26, model `claude-fable-5-1`. Everyth
 | https://github.com/shanelabountyai/coursework/actions/runs/40259527052 | 54a6f7b | **red** | `foundation:drift`: `fetch-depth: 0` does not help — the clone repo has no tags at all (D-41) |
 | https://github.com/shanelabountyai/coursework/actions/runs/40260733897 | 601746c | green | drift pinned to the v1.3.0 commit; engines through 1.8 |
 | https://github.com/shanelabountyai/coursework/actions/runs/40261205255 | 6ced3ab | green | `course:eval` and `progress:verify` wired (0 diffs in CI) |
-| https://github.com/shanelabountyai/coursework/actions/runs/40261465771 | 0a6503b | **red on purpose** | task 1.12 proof: S5 tie order flipped, GS-03 9233 → 9250, 15 grade rows diverge |
-| (see below) | revert + docs | green expected | task 1.12 green half; recorded at the end of this file |
+| https://github.com/shanelabountyai/coursework/actions/runs/40261465771 | 0a6503b | **red, but for the wrong reason** | first 1.12 attempt: the flip was right but its comment held `1.12`, which `engine:lint`'s decimal-literal grep under `src/grades/` caught before `course:eval` ran. The lint reads comments too — by design, it is a grep. Redone below |
+| https://github.com/shanelabountyai/coursework/actions/runs/40261661360 | 4965a52 | green | revert of the first flip + Phase 1 gate docs |
+| https://github.com/shanelabountyai/coursework/actions/runs/40261702476 | cf25905 | **red on purpose at `course:eval`** | task 1.12 proof: S5 tie order flipped (lint-clean comment), GS-03 9233 → 9250, 15 grade rows diverge; `engine:lint` passed, `course:eval` failed |
+| (next run on this branch) | revert of cf25905 | green expected | task 1.12 green half — Shane: confirm on PR #1 |
 
 ### What the sandbox could not run (D-4: CI is the gate)
 
@@ -57,7 +59,7 @@ Unattended cloud build session, 2026-10-25/26, model `claude-fable-5-1`. Everyth
 - **1.9 Drip and `course:eval`** — `drip.ts`; `scripts/course-eval.ts` + `scripts/lib/{csv,fixtures,eval}.ts`; both reference outputs line for line; exit 1 on a planted row.
 - **1.10 `progress:verify`** — 341 + 300 from events; `--drop-event IE-00001` moves exactly one row.
 - **1.11 `docs/EVAL.md`** — every number next to its command.
-- **1.12 CI gate** — red run 40261465771 (deliberate), green run after the revert (below).
+- **1.12 CI gate** — red run 40261702476 (deliberate, fails at `course:eval`), green run 40261661360 before it and the revert push after it; the first attempt 40261465771 was red at `engine:lint` instead (comment held a decimal), so it was redone.
 - **Pre-Phase-2 check** — `catalog:check` with `MGT-301 → any(MGT-201, MGT-202, MGT-401)` prints `REJECT:CYCLE` `MGT-301 -> MGT-401 -> MGT-301` and nothing else; `fixtures/` unchanged. `docs/phase-2-tasks.md` drafted.
 
 ### Decided this session
