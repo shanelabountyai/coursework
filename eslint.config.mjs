@@ -48,6 +48,16 @@ const config = [
       }],
     },
   },
+  // Phase 3, task 3.7 (Bookable A-096): axe runs ONLY through e2e/helpers/a11y.ts, which scans both colour
+  // schemes. A spec that loads axe itself would be light-only by default, so it is refused here.
+  {
+    files: ['e2e/**/*.ts'],
+    ignores: ['e2e/helpers/a11y.ts'],
+    rules: {
+      'no-restricted-imports': ['error', { patterns: [{ group: ['axe-core', 'axe-core/*', '@axe-core/*'], message: 'Use expectAccessible from e2e/helpers/a11y.ts: it scans light AND dark (D-59).' }] }],
+      'no-restricted-syntax': ['error', { selector: 'Literal[value=/axe-core/]', message: 'Use expectAccessible from e2e/helpers/a11y.ts: it scans light AND dark (D-59).' }],
+    },
+  },
 ];
 
 export default config;
