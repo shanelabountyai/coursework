@@ -25,6 +25,7 @@ D-51 learner link (explicit, audited, one per user per org) · D-52 stored `Cata
 | https://github.com/shanelabountyai/coursework/actions/runs/40344199829 | 9337fba | green | decisions doc + billing removal |
 | https://github.com/shanelabountyai/coursework/actions/runs/40345313191 | 532bc69 | green | archive, learner link, drafts, today; Phase 1/2 proofs re-run in CI |
 | https://github.com/shanelabountyai/coursework/actions/runs/40351666361 | aefd586 | green | Phase 3: pages, actions, e2e with axe (no red runs this session) |
+| https://github.com/shanelabountyai/coursework/actions/runs/40352540079 | 5006bb7 | green | Phase 3 gate docs — the head |
 
 ### What the sandbox could and could not run
 
