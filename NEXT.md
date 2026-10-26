@@ -27,7 +27,7 @@ Unattended cloud build session, 2026-10-26 ("Go phase 2"), model `claude-fable-5
 | https://github.com/shanelabountyai/coursework/actions/runs/40320245350 | 1d87c91 | **red** at `migrate diff` | same cause; the PR-comment diagnostic did not post (token) |
 | https://github.com/shanelabountyai/coursework/actions/runs/40320706824 | 03cb04a | **red** at `migrate diff` | same cause, now with the message in the annotation: `--from-url was removed` |
 | https://github.com/shanelabountyai/coursework/actions/runs/40321125370 | e66d14d | **green** | flags fixed (`--from-config-datasource --to-schema prisma/schema`); the whole Phase 2 tree: migrate diff empty (hand-written SQL = schema), 295 vitest tests, Playwright |
-| (see the Phase 2 gate commit) | HEAD | recorded in the follow-up commit | 2.11 CI seed + `progress:verify --db` steps, docs, Phase 3 draft |
+| https://github.com/shanelabountyai/coursework/actions/runs/40321531319 | 5bcc251 | **green** | 2.11 CI seed (`ci-fixtures`) + `progress:verify --db` steps, docs, Phase 3 draft — the Phase 2 head |
 
 ### What the sandbox could and could not run (D-47)
 
