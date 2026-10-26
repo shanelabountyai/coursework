@@ -56,14 +56,15 @@ jobs:
       - run: npx prisma migrate deploy
       # Phase 2 (task 2.11): the clone's migration SQL is hand-written (the sandbox has no schema engine), so
       # prove the applied database equals the Prisma schema — any column, index or FK the SQL got wrong fails here.
-      - run: npx prisma migrate diff --from-url "$DATABASE_URL" --to-schema-datamodel prisma/schema --exit-code --script > migrate-diff.sql || (echo "::error::migrate diff is not empty" && cat migrate-diff.sql && exit 1)
-      # Diagnostic: the cloud build session cannot read job logs through its proxy, so a non-empty diff is also
-      # posted on the PR (remove once the schema and the migration agree).
-      - if: failure() && github.event_name == 'pull_request'
-        env: { GH_TOKEN: '${{ github.token }}' }
-        run: |
-          { echo 'migrate diff (database → schema) on ${{ github.sha }}:'; echo '```sql'; cat migrate-diff.sql 2>/dev/null || echo '(no file)'; echo '```'; } > body.md
-          gh pr comment ${{ github.event.pull_request.number }} --body-file body.md || true
+      # Phase 2 (task 2.11): the clone's migration SQL is hand-written (the sandbox has no schema engine), so
+      # prove the applied database equals the Prisma schema — any column, index or FK the SQL got wrong fails
+      # here. The output goes into the error annotation too: the cloud build session can read annotations
+      # through the API but not job logs.
+      - run: |
+          set +e
+          npx prisma migrate diff --from-url "$DATABASE_URL" --to-schema-datamodel prisma/schema --exit-code --script > migrate-diff.sql 2>&1
+          rc=$?
+          if [ $rc -ne 0 ]; then echo "::error::migrate diff rc=$rc: $(head -c 3500 migrate-diff.sql | tr '\n' ' ')"; cat migrate-diff.sql; exit 1; fi
       - run: npx vitest run
       # Production build, served — the way it ships. login.spec.ts drives a real page.
       - run: npx playwright install --with-deps chromium
