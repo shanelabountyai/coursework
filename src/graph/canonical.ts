@@ -28,7 +28,6 @@ export function canonical(value: Json): string {
       if (Array.isArray(value)) return '[' + value.map(canonical).join(',') + ']';
       const keys = Object.keys(value).sort();
       for (const k of keys) {
-        // eslint-disable-next-line no-control-regex
         if (!/^[\x00-\x7f]*$/.test(k)) throw new Error(`canonical: non-ASCII key ${JSON.stringify(k)} would sort differently in Python (D-36)`);
       }
       return '{' + keys.map((k) => JSON.stringify(k) + ':' + canonical(value[k] as Json)).join(',') + '}';
@@ -43,6 +42,8 @@ export function sha256Hex(text: string): string {
 }
 
 /** V1: SHA-256 of the canonical JSON of {certificates, courses, equivalencies}; the version label is outside the hash. */
-export function catalogHash(catalog: { courses: Json; equivalencies: Json; certificates: Json }): string {
-  return sha256Hex(canonical({ courses: catalog.courses, equivalencies: catalog.equivalencies, certificates: catalog.certificates }));
+export function catalogHash(catalog: { courses: unknown; equivalencies: unknown; certificates: unknown }): string {
+  // The structural types are checked by canonical() at runtime (a float or a function throws); the cast only widens.
+  const body = { courses: catalog.courses, equivalencies: catalog.equivalencies, certificates: catalog.certificates } as Json;
+  return sha256Hex(canonical(body));
 }
