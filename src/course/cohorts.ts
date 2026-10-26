@@ -4,11 +4,13 @@ import { db } from '@/core/db';
 import { validateScheme } from '@/grades/scheme';
 import { courseMap } from '@/graph/types';
 import type { Actor } from './actor';
+import { assertWritable } from './archive';
 import { schemeOf } from './grades';
 import { loadVersion, type Tx } from './versions';
 
 export async function createLearner(actor: Actor, input: { code: string; name: string; email: string; targetCertificate: string; enrolledVersionId: string; userId?: string | null }, tx?: Tx) {
   const run = async (t: Tx) => {
+    await assertWritable(actor.orgId, t);
     const { catalog } = await loadVersion(input.enrolledVersionId, t);
     if (!catalog.certificates.some((c) => c.code === input.targetCertificate)) throw new Error(`createLearner: version ${catalog.version} has no certificate ${input.targetCertificate}`);
     const row = await t.learner.create({ data: { orgId: actor.orgId, code: input.code, name: input.name, email: input.email.toLowerCase(), targetCertificate: input.targetCertificate, enrolledVersionId: input.enrolledVersionId, userId: input.userId ?? null } });
@@ -20,6 +22,7 @@ export async function createLearner(actor: Actor, input: { code: string; name: s
 
 export async function grantWaiver(actor: Actor, input: { learnerId: string; course: string; reason: string; grantedDay: string; grantedBy: string }, tx?: Tx) {
   const run = async (t: Tx) => {
+    await assertWritable(actor.orgId, t);
     const row = await t.waiver.create({ data: { orgId: actor.orgId, ...input, actorUserId: actor.userId } });
     await audit(actor, 'waiver.granted', { targetType: 'Waiver', targetId: row.id, data: { learnerId: input.learnerId, course: input.course, reason: input.reason, day: input.grantedDay } }, t);
     return row;
@@ -39,6 +42,7 @@ export interface CohortInput {
 /** A cohort runs a course of its version; a scheme may be attached only if it passes S1 (REJECT schemes are stored DRAFT). */
 export async function createCohort(actor: Actor, input: CohortInput, tx?: Tx) {
   const run = async (t: Tx) => {
+    await assertWritable(actor.orgId, t);
     const { catalog } = await loadVersion(input.catalogVersionId, t);
     if (!courseMap(catalog).has(input.course)) throw new Error(`createCohort: ${input.course} is not in version ${catalog.version}`);
     let schemeId: string | null = null;
@@ -59,6 +63,7 @@ export async function createCohort(actor: Actor, input: CohortInput, tx?: Tx) {
 
 export async function enroll(actor: Actor, input: { cohortId: string; learnerId: string; status?: 'IN_PROGRESS' | 'COMPLETED'; catalogVersionId?: string }, tx?: Tx) {
   const run = async (t: Tx) => {
+    await assertWritable(actor.orgId, t);
     const cohort = await t.cohort.findUniqueOrThrow({ where: { id: input.cohortId }, select: { orgId: true, catalogVersionId: true } });
     if (cohort.orgId !== actor.orgId) throw new Error('enroll: cohort belongs to another org');
     const row = await t.enrollment.create({ data: { orgId: actor.orgId, cohortId: input.cohortId, learnerId: input.learnerId, status: input.status ?? 'IN_PROGRESS', catalogVersionId: input.catalogVersionId ?? cohort.catalogVersionId } });
@@ -70,6 +75,7 @@ export async function enroll(actor: Actor, input: { cohortId: string; learnerId:
 
 export async function createAssignment(actor: Actor, input: { cohortId: string; code: string; category: string; pointsPossible: number; dueDay: string; extraCredit: boolean }, tx?: Tx) {
   const run = async (t: Tx) => {
+    await assertWritable(actor.orgId, t);
     const cohort = await t.cohort.findUniqueOrThrow({ where: { id: input.cohortId }, select: { orgId: true, scheme: true } });
     if (cohort.orgId !== actor.orgId) throw new Error('createAssignment: cohort belongs to another org');
     if (!cohort.scheme) throw new Error('createAssignment: the cohort has no grade scheme');

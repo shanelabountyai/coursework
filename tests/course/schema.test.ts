@@ -8,8 +8,10 @@ afterAll(() => db.$disconnect());
 
 export const COURSE_TABLES = [
   'CatalogVersion', 'PublishAttempt', 'Learner', 'Waiver', 'CompletionEvent', 'Cohort', 'ContentItem', 'Enrollment', 'ItemCompletion', 'GradeScheme', 'Assignment', 'Submission',
+  'OrgArchive', 'CatalogDraft', // D-56, D-52
 ] as const;
-export const APPEND_ONLY_TABLES = ['CatalogVersion', 'PublishAttempt', 'CompletionEvent', 'ItemCompletion', 'Submission'] as const;
+// The five history tables (D-45) plus the insert-only archive row (D-56). CatalogDraft is mutable on purpose (D-52).
+export const APPEND_ONLY_TABLES = ['CatalogVersion', 'PublishAttempt', 'CompletionEvent', 'ItemCompletion', 'Submission', 'OrgArchive'] as const;
 
 // A stored answer under any of these names is the P1 violation; `scoreHp` is an input, not a derived value.
 const STORED_ANSWER = /progress|percent|eligib|final|letter|passed|grade_hp|gradeHp|satisfied|missing_set|\bbp$/i;
@@ -38,9 +40,14 @@ describe('2.1 schema', () => {
     }
   });
 
-  it('the append-only trigger is on exactly the five tables (2.2)', async () => {
+  it('the append-only trigger is on exactly the five history tables and OrgArchive (2.2, D-56)', async () => {
     const rows = await db.$queryRaw<{ t: string }[]>`SELECT event_object_table AS t FROM information_schema.triggers WHERE trigger_schema = current_schema() AND action_statement LIKE '%coursework_append_only%' GROUP BY 1 ORDER BY 1`;
     expect(rows.map((r) => r.t)).toEqual([...APPEND_ONLY_TABLES].sort());
+  });
+
+  it('the archived-org guard (D-56) is on every clone table that can be written', async () => {
+    const rows = await db.$queryRaw<{ t: string }[]>`SELECT event_object_table AS t FROM information_schema.triggers WHERE trigger_schema = current_schema() AND action_statement LIKE '%coursework_refuse_archived%' GROUP BY 1 ORDER BY 1`;
+    expect(rows.map((r) => r.t)).toEqual(COURSE_TABLES.filter((t) => t !== 'OrgArchive').sort());
   });
 });
 

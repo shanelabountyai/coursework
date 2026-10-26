@@ -29,6 +29,7 @@ model User {
   loginTokens      LoginToken[]
   recoveryCodes    RecoveryCode[]
   learners         Learner[] // app
+  catalogDrafts    CatalogDraft[] // app
 }
 
 /// Magic-link token. Only sha256 stored; single use; 15 min.
@@ -96,6 +97,8 @@ model Org {
   itemCompletions  ItemCompletion[] // app
   gradeSchemes     GradeScheme[] // app
   submissions      Submission[] // app
+  archive          OrgArchive? // app
+  catalogDrafts    CatalogDraft[] // app
 }
 
 model Membership {

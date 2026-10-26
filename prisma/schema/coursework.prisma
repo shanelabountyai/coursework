@@ -42,6 +42,7 @@ model CatalogVersion {
   completions     CompletionEvent[]
   cohorts         Cohort[]
   enrollments     Enrollment[]
+  drafts          CatalogDraft[]
 
   @@unique([orgId, label])
   @@index([orgId, createdAt])
@@ -88,7 +89,7 @@ model Learner {
   submissions Submission[]
 
   @@unique([orgId, code])
-  @@index([orgId, userId])
+  @@unique([orgId, userId]) // D-51: one learner per user per org (NULLs are distinct: unlinked learners are unconstrained)
 }
 
 /// G6: a leaf satisfied by WAIVER:<reason>. Day is the calendar day granted (CHAR(10)).
@@ -254,4 +255,32 @@ model Submission {
   createdAt    DateTime   @default(now()) @db.Timestamptz(6)
 
   @@index([cohortId, learnerId])
+}
+
+/// D-56: an org with append-only history is archived, never deleted. Insert-only (append-only trigger); one row per org.
+/// While a row exists every clone write path refuses (src/course/archive.ts, and the coursework_refuse_archived trigger).
+model OrgArchive {
+  id         String   @id @default(uuid()) @db.Uuid
+  orgId      String   @unique @db.Uuid
+  org        Org      @relation(fields: [orgId], references: [id], onDelete: Restrict)
+  archivedAt DateTime @default(now()) @db.Timestamptz(6)
+  archivedBy String?  @db.Uuid // no FK: survives user deletion, like AuditEvent.actorUserId
+  reason     String
+}
+
+/// D-52: one in-progress catalog edit per editor. Mutable and outside the append-only tables; publishing it
+/// still goes only through publishEdit (G5). `ops` is a DraftEdit's operation list.
+model CatalogDraft {
+  id            String         @id @default(uuid()) @db.Uuid
+  orgId         String         @db.Uuid
+  org           Org            @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  editorUserId  String         @db.Uuid
+  editor        User           @relation(fields: [editorUserId], references: [id], onDelete: Cascade)
+  baseVersionId String         @db.Uuid
+  baseVersion   CatalogVersion @relation(fields: [baseVersionId], references: [id], onDelete: Restrict)
+  ops           Json // EditOp[]
+  createdAt     DateTime       @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime       @updatedAt @db.Timestamptz(6)
+
+  @@unique([orgId, editorUserId])
 }

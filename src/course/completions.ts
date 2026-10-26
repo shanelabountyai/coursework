@@ -11,6 +11,7 @@ import { certificateProgress, shortestPath, type ShortestPath } from '@/graph/pa
 export type CertificateProgress = ReturnType<typeof certificateProgress>;
 import { cmpStr, courseMap, type Catalog, type Code } from '@/graph/types';
 import type { Actor } from './actor';
+import { assertWritable } from './archive';
 import { learnerStateFor } from './state';
 import { loadVersion, type Tx } from './versions';
 
@@ -19,6 +20,7 @@ export type CompletionKind = 'PASS' | 'FAIL';
 /** Append one completion. `day` is a calendar day string; `versionId` is the version it was evaluated under (V2). */
 export async function recordCompletion(actor: Actor, input: { learnerId: string; course: Code; kind: CompletionKind; day: string; versionId: string }, tx?: Tx) {
   const run = async (t: Tx) => {
+    await assertWritable(actor.orgId, t);
     const learner = await t.learner.findUniqueOrThrow({ where: { id: input.learnerId }, select: { orgId: true } });
     if (learner.orgId !== actor.orgId) throw new Error('recordCompletion: learner belongs to another org');
     const { catalog } = await loadVersion(input.versionId, t);

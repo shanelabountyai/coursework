@@ -14,6 +14,7 @@ import { applyEdit, validateCatalog, type DraftEdit, type PublishCheck } from '@
 import { retroactiveReport, type EnrollmentRef, type Grandfathered } from '@/graph/retro';
 import type { Catalog } from '@/graph/types';
 import type { Actor } from './actor';
+import { assertWritable } from './archive';
 import { learnerStatesFor } from './state';
 import { contentOf, loadVersion, type Tx } from './versions';
 
@@ -32,6 +33,7 @@ export async function createInitialVersion(actor: Actor, catalog: Catalog, tx?: 
   const check = validateCatalog(catalog);
   if (check.result !== 'ACCEPT') throw new Error(`createInitialVersion: ${check.result} — ${check.errors.map((e) => `${e.code}: ${e.detail}`).join('; ')}`);
   const run = async (t: Tx) => {
+    await assertWritable(actor.orgId, t);
     const v = await insertVersion(t, actor, catalog.version, catalog, check as Accepted, null);
     await audit(actor, 'catalog.version_created', { targetType: 'CatalogVersion', targetId: v.id, data: { label: v.label, hash: v.hash } }, t);
     return v;
@@ -59,6 +61,7 @@ async function enrollmentRefs(orgId: string, tx: Tx): Promise<EnrollmentRef[]> {
  */
 export async function publishEdit(actor: Actor, fromVersionId: string, edit: DraftEdit, label: string): Promise<PublishResult> {
   return db.$transaction(async (tx) => {
+    await assertWritable(actor.orgId, tx);
     const { row: from, catalog } = await loadVersion(fromVersionId, tx);
     if (from.orgId !== actor.orgId) throw new Error('publishEdit: version belongs to another org');
     const next = applyEdit(catalog, edit);

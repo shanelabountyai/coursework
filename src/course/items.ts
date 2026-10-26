@@ -7,6 +7,7 @@ import { audit } from '@/core/audit';
 import { db } from '@/core/db';
 import { checkItemCompletion, courseProgressBp, type Cohort as CohortView, type DripVerdict } from '@/graph/drip';
 import type { Actor } from './actor';
+import { assertWritable } from './archive';
 import type { Tx } from './versions';
 
 export interface ItemCompletionInput {
@@ -44,6 +45,7 @@ export async function cohortView(orgId: string, cohortCode: string, tx: Tx = db)
 
 export async function completeItem(actor: Actor, input: ItemCompletionInput, tx?: Tx): Promise<ItemCompletionResult> {
   const run = async (t: Tx): Promise<ItemCompletionResult> => {
+    await assertWritable(actor.orgId, t);
     const c = await cohortView(actor.orgId, input.cohortCode, t);
     const cohorts = new Map(c ? [[c.view.id, c.view]] : []);
     const verdict = checkItemCompletion({ learner: input.learnerCode, cohort: input.cohortCode, item: input.itemCode, day: input.day }, cohorts, (l, co) => co === c?.view.id && c.learnerIds.has(l));

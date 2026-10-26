@@ -10,6 +10,7 @@ import { gradeLearner, type Assignment, type Grade, type Submission } from '@/gr
 import { validateScheme, type Scheme } from '@/grades/scheme';
 import { canonical, sha256Hex, type Json } from '@/graph/canonical';
 import type { Actor } from './actor';
+import { assertWritable } from './archive';
 import type { Tx } from './versions';
 
 
@@ -22,6 +23,7 @@ export async function createScheme(actor: Actor, scheme: Scheme, tx?: Tx) {
   const check = validateScheme(scheme);
   const status = check.result === 'ACCEPT' ? (scheme.status ?? 'PUBLISHED') : 'DRAFT';
   const run = async (t: Tx) => {
+    await assertWritable(actor.orgId, t);
     const row = await t.gradeScheme.create({ data: { orgId: actor.orgId, code: scheme.id, content: scheme as unknown as Prisma.InputJsonObject, status, hash: schemeHash(scheme) } });
     await audit(actor, 'scheme.created', { targetType: 'GradeScheme', targetId: row.id, data: { code: scheme.id, result: check.result, weights_bp: check.weights_bp } }, t);
     return { row, check };
@@ -39,6 +41,7 @@ export function schemeOf(row: { code: string; content: Prisma.JsonValue; hash: s
 export async function recordSubmission(actor: Actor, input: { cohortCode: string; learnerCode: string; assignmentCode: string; scoreHp: number; submittedDay: string }, tx?: Tx) {
   if (!Number.isInteger(input.scoreHp) || input.scoreHp < 0) throw new Error(`recordSubmission: score_hp must be a non-negative integer, got ${String(input.scoreHp)}`);
   const run = async (t: Tx) => {
+    await assertWritable(actor.orgId, t);
     const cohort = await t.cohort.findUniqueOrThrow({ where: { orgId_code: { orgId: actor.orgId, code: input.cohortCode } }, select: { id: true } });
     const learner = await t.learner.findUniqueOrThrow({ where: { orgId_code: { orgId: actor.orgId, code: input.learnerCode } }, select: { id: true } });
     const assignment = await t.assignment.findUniqueOrThrow({ where: { cohortId_code: { cohortId: cohort.id, code: input.assignmentCode } }, select: { id: true } });
@@ -55,6 +58,7 @@ export async function correctScore(actor: Actor, submissionId: string, newScoreH
   if (!Number.isInteger(newScoreHp) || newScoreHp < 0) throw new Error('correctScore: score_hp must be a non-negative integer');
   if (!reason.trim()) throw new Error('correctScore: a reason is required');
   const run = async (t: Tx) => {
+    await assertWritable(actor.orgId, t);
     const old = await t.submission.findUniqueOrThrow({ where: { id: submissionId }, include: { supersededBy: { select: { id: true } } } });
     if (old.orgId !== actor.orgId) throw new Error('correctScore: submission belongs to another org');
     if (old.supersededBy) throw new Error(`correctScore: ${submissionId} is already superseded by ${old.supersededBy.id}`);
