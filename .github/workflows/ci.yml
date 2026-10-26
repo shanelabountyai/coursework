@@ -64,6 +64,10 @@ jobs:
           rc=$?
           if [ $rc -ne 0 ]; then echo "::error::migrate diff rc=$rc: $(head -c 3500 migrate-diff.sql | tr '\n' ' ')"; cat migrate-diff.sql; exit 1; fi
       - run: npx vitest run
+      # Task 2.8 / 2.9 as commands: seed fixtures/ through the write paths into the runner's database, then
+      # recompute 341 + 300 progress values from its rows and diff the oracle's answers (0 diffs).
+      - run: npx tsx scripts/seed-fixtures.ts --slug ci-fixtures
+      - run: npx tsx scripts/progress-verify.ts --db --slug ci-fixtures
       # Production build, served — the way it ships. login.spec.ts drives a real page.
       - run: npx playwright install --with-deps chromium
       - run: npx playwright test
