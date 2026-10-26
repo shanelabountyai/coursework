@@ -98,7 +98,7 @@ export function gradeLearner(scheme: Scheme, assignments: readonly Assignment[],
 
   // S5 + S6 per category: ratio over kept regular work (points-weighted), null when empty
   const categoryRatio = (rows: Row[], dropN: number, withEc: boolean): { ratio: Rational; dropped: string[] } | null => {
-    const regular = rows.filter((r) => !r.extra).sort((x, y) => (x.adj < y.adj ? -1 : x.adj > y.adj ? 1 : cmpStr(y.code, x.code))); // THROWAWAY for task twelve: tie order flipped on purpose, reverted next commit
+    const regular = rows.filter((r) => !r.extra).sort((x, y) => (x.adj < y.adj ? -1 : x.adj > y.adj ? 1 : cmpStr(x.code, y.code)));
     const dropped = regular.slice(0, dropN).map((r) => r.code);
     const kept = regular.slice(dropN);
     if (!kept.length) return null;
