@@ -1,0 +1,50 @@
+/* Clone-owned palette (Phase 3, task 3.7). Light and dark flip with prefers-color-scheme; every text token is
+   checked by axe in both schemes (e2e/helpers/a11y.ts). Muted text is chosen for >= 4.5:1 on its background
+   in each scheme (Bookable A-096: the dark half is the one that goes unmeasured). */
+:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #1a1a1a;
+  --muted: #525252;
+  --line: #d4d4d4;
+  --panel: #f5f5f5;
+  --link: #1d4ed8;
+  --ok: #166534;
+  --bad: #b91c1c;
+  --warn: #92400e;
+  --note-bg: #fffbeb;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #ededed;
+    --muted: #b0b0b0;
+    --line: #3f3f3f;
+    --panel: #1c1c1c;
+    --link: #93c5fd;
+    --ok: #86efac;
+    --bad: #fca5a5;
+    --warn: #fcd34d;
+    --note-bg: #2a2310;
+  }
+}
+body { background: var(--bg); color: var(--fg); font-family: system-ui, sans-serif; line-height: 1.45; margin: 0 auto; max-width: 72rem; padding: 0 1rem 3rem; }
+a { color: var(--link); }
+nav { padding: .75rem 0; border-bottom: 1px solid var(--line); margin-bottom: 1rem; }
+table { border-collapse: collapse; margin: .5rem 0 1rem; }
+th, td { border-bottom: 1px solid var(--line); padding: .25rem .5rem; text-align: left; vertical-align: top; }
+th { background: var(--panel); }
+code, .mono { font-family: ui-monospace, monospace; }
+.muted { color: var(--muted); }
+.ok { color: var(--ok); }
+.bad { color: var(--bad); }
+.warn { color: var(--warn); }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+.scope { background: var(--note-bg); border: 1px solid var(--line); padding: .5rem .75rem; font-size: .9rem; margin: 1rem 0; }
+.panel { background: var(--panel); border: 1px solid var(--line); padding: .75rem; margin: .75rem 0; }
+input, select, textarea, button { font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--muted); padding: .2rem .4rem; }
+button { cursor: pointer; }
+button:disabled { opacity: .7; cursor: not-allowed; }
+label { margin-right: .75rem; }
+[role='alert'] { color: var(--bad); }
+[role='status'] { color: var(--ok); }
