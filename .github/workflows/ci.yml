@@ -45,9 +45,7 @@ jobs:
       - run: npm run typecheck
       # Coursework gate (docs/phase-1-tasks.md 1.12): engine purity and date bans, then the oracle agreement, then the
       # fixture freeze — fixtures:check runs AFTER course:eval so a product-code write into fixtures/ fails the tree check.
-      # The clone repo carries no tags (the cloud session cannot push one, D-41), so drift is pinned to the commit
-      # v1.3.0 points at. When Shane pushes the tag (`git push origin v1.3.0`) this becomes `npm run foundation:drift`.
-      - run: npm run foundation:drift -- --base e8c0f74bc1670c217a3868746051abeb4b9890a0
+      - run: npm run foundation:drift
       - run: npm run engine:lint
       - run: npm run course:eval
       - run: npm run progress:verify
