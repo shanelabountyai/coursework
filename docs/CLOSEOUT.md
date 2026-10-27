@@ -45,4 +45,4 @@ Payments · content hosting · sending anything (3.9 outbox notices dropped, D-6
 - [x] `docs/DEMO.md`
 - [x] Exec brief, *Coursework in Brief*: https://claude.ai/artifact/6HGL7P9KLq8wjHCUA8WiGy (private until Shane shares it; no screenshots yet, see NEXT.md)
 - [ ] LinkedIn drafts in the Ledger
-- [ ] Cost review (D-69)
+- [ ] Cost review (D-70)

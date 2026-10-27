@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { requireOrg } from '@/core/authz/guards';
 import { db } from '@/core/db';
 import { ActionForm } from '@/core/ui/action-form';
@@ -9,6 +10,7 @@ import { schoolToday, SCHOOL_TIME_ZONE } from '@/course/today';
 import { courseProgressBp, releaseDay } from '@/graph/drip';
 import { cmpStr } from '@/graph/types';
 import { ScopeNote } from '@/app/ui/scope-note';
+import { Pill } from '@/app/ui/status';
 import { completeItemAction } from '../../actions';
 
 export const metadata = { title: 'Drip calendar' };
@@ -32,70 +34,90 @@ export default async function Drip({ params }: { params: Promise<{ org: string; 
   const archived = await archiveOf(ctx.orgId);
   return (
     <main>
-      <h1>Drip calendar · {cohort.code}</h1>
-      <p>
-        Course <span className="mono">{cohort.course}</span>, starts <span className="mono">{cohort.startDay}</span>. An item is released on start day + its offset, inclusive (R1).
-        Today at the school ({SCHOOL_TIME_ZONE}) is <span className="mono" data-testid="school-today">{today}</span>.
-      </p>
-      <h2>Items by release day</h2>
-      <table>
-        <thead>
-          <tr>
-            <th scope="col">Item</th><th scope="col">Title</th><th scope="col">Released</th>
-            {enrolled.map((l) => <th scope="col" key={l}>{l}</th>)}
-          </tr>
-        </thead>
-        <tbody>
-          {items.map((i) => {
-            const open = i.release <= today;
-            return (
-              <tr key={i.code}>
-                <td className="mono">{i.code}</td>
-                <td>{i.title}</td>
-                <td className="mono">{i.release}{open ? '' : ' (locked)'}</td>
-                {enrolled.map((l) => {
-                  const d = done.get(`${l}|${i.code}`);
-                  if (d) return <td key={l} className="ok">done {d}</td>;
-                  if (!open) return <td key={l} className="muted">Locked until {i.release}</td>;
-                  if (self && !archived) {
-                    return (
-                      <td key={l}>
-                        <ActionForm action={completeItemAction.bind(null, ctx.slug)}>
-                          <input type="hidden" name="cohortId" value={cohort.id} />
-                          <input type="hidden" name="itemCode" value={i.code} />
-                          <button type="submit" aria-label={`Complete ${i.code}`}>Complete</button>
-                        </ActionForm>
-                      </td>
-                    );
-                  }
-                  return <td key={l}>available</td>;
-                })}
+      <header className="page-head">
+        <div>
+          <p className="eyebrow"><Link href={`/o/${ctx.slug}/cohorts`}>Cohorts</Link> / {cohort.code}</p>
+          <h1>Drip calendar · {cohort.code}</h1>
+          <p className="lede">
+            Course <span className="mono">{cohort.course}</span>, starts <span className="date">{cohort.startDay}</span>. An item is released on start day + its offset, inclusive (R1).
+          </p>
+        </div>
+        <div className="stat"><span className="stat-label">Today at the school ({SCHOOL_TIME_ZONE})</span><span className="stat-num" style={{ fontSize: '1.5rem' }} data-testid="school-today">{today}</span></div>
+      </header>
+      <section className="card" aria-labelledby="items-h">
+        <header><h2 id="items-h">Items by release day</h2><p>Scroll sideways for more learners; the item column stays put.</p></header>
+        <div className="table-wrap">
+          <table className="table--matrix">
+            <caption>{items.length} items, earliest release first</caption>
+            <thead>
+              <tr>
+                <th scope="col">Item</th><th scope="col">Title</th><th scope="col">Released</th>
+                {enrolled.map((l) => <th scope="col" key={l}>{l}</th>)}
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
-      <h2>Progress per enrollment (derived, never stored)</h2>
-      <table>
-        <thead><tr><th scope="col">Learner</th><th scope="col" className="num">Done</th><th scope="col" className="num">Progress</th></tr></thead>
-        <tbody>
-          {enrolled.map((l) => {
-            const n = items.filter((i) => done.has(`${l}|${i.code}`)).length;
-            return <tr key={l}><td>{l}</td><td className="num">{n} of {items.length}</td><td className="num">{bpText(courseProgressBp(n, items.length))}</td></tr>;
-          })}
-        </tbody>
-      </table>
-      <h2>Refused attempts ({refused.length})</h2>
-      {refused.length ? (
-        <table>
-          <thead><tr><th scope="col">Learner</th><th scope="col">Item</th><th scope="col">Attempted</th><th scope="col">Released</th><th scope="col">Verdict</th></tr></thead>
-          <tbody>
-            {refused.map((r, k) => (
-              <tr key={k}><td>{r.learner}</td><td className="mono">{r.item}</td><td className="mono">{r.day}</td><td className="mono">{releaseOf.get(r.item) ?? '—'}</td><td className="bad">{r.verdict}</td></tr>
-            ))}
-          </tbody>
-        </table>
-      ) : <p className="muted">None.</p>}
+            </thead>
+            <tbody>
+              {items.map((i) => {
+                const open = i.release <= today;
+                return (
+                  <tr key={i.code}>
+                    <td className="mono">{i.code}</td>
+                    <td>{i.title}</td>
+                    <td className="date">{i.release}{open ? '' : ' (locked)'}</td>
+                    {enrolled.map((l) => {
+                      const d = done.get(`${l}|${i.code}`);
+                      if (d) return <td key={l}><Pill tone="ok">{`done ${d}`}</Pill></td>;
+                      if (!open) return <td key={l} className="muted">Locked until {i.release}</td>;
+                      if (self && !archived) {
+                        return (
+                          <td key={l}>
+                            <ActionForm action={completeItemAction.bind(null, ctx.slug)}>
+                              <input type="hidden" name="cohortId" value={cohort.id} />
+                              <input type="hidden" name="itemCode" value={i.code} />
+                              <button type="submit" aria-label={`Complete ${i.code}`}>Complete</button>
+                            </ActionForm>
+                          </td>
+                        );
+                      }
+                      return <td key={l}><Pill tone="info">available</Pill></td>;
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section className="card" aria-labelledby="prog-h">
+        <header><h2 id="prog-h">Progress per enrollment</h2><p>Derived from completions on every read, never stored.</p></header>
+        <div className="table-wrap">
+          <table>
+            <caption>Items done per learner</caption>
+            <thead><tr><th scope="col">Learner</th><th scope="col" className="num">Done</th><th scope="col" className="num">Progress</th></tr></thead>
+            <tbody>
+              {enrolled.map((l) => {
+                const n = items.filter((i) => done.has(`${l}|${i.code}`)).length;
+                return <tr key={l}><td>{l}</td><td className="num">{n} of {items.length}</td><td className="num">{bpText(courseProgressBp(n, items.length))}</td></tr>;
+              })}
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section className="card" aria-labelledby="ref-h">
+        <header><h2 id="ref-h">Refused attempts ({refused.length})</h2><p>Read from the audit log.</p></header>
+        {refused.length ? (
+          <div className="table-wrap">
+            <table>
+              <caption>{refused.length} refused completions</caption>
+              <thead><tr><th scope="col">Learner</th><th scope="col">Item</th><th scope="col">Attempted</th><th scope="col">Released</th><th scope="col">Verdict</th></tr></thead>
+              <tbody>
+                {refused.map((r, k) => (
+                  <tr key={k}><td>{r.learner}</td><td className="mono">{r.item}</td><td className="date">{r.day}</td><td className="date">{releaseOf.get(r.item) ?? '—'}</td><td><Pill>{r.verdict}</Pill></td></tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : <p className="empty">None.</p>}
+      </section>
       <ScopeNote />
     </main>
   );

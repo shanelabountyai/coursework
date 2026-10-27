@@ -13,22 +13,32 @@ export default async function Archive({ params }: { params: Promise<{ org: strin
   const blocker = await deletionBlocker(ctx.orgId);
   return (
     <main>
-      <h1>Archive this org</h1>
-      <p>
-        History rows: {Object.entries(counts).map(([t, n]) => `${t} ${n.toLocaleString('en-US')}`).join(' · ')}.{' '}
-        {blocker ? 'Deleting is refused: ' + blocker : 'This org has no history yet and can still be deleted from Settings.'}
-      </p>
+      <header className="page-head">
+        <div>
+          <p className="eyebrow">Settings / archive</p>
+          <h1>Archive this org</h1>
+          <p className="lede">
+            History rows: {Object.entries(counts).map(([t, n]) => `${t} ${n.toLocaleString('en-US')}`).join(' · ')}.{' '}
+            {blocker ? 'Deleting is refused: ' + blocker : 'This org has no history yet and can still be deleted from Settings.'}
+          </p>
+        </div>
+      </header>
       {archived ? (
-        <p className="panel">Archived on {archived.archivedAt.toISOString().replace('T', ' ').slice(0, 19)} UTC. Reason: {archived.reason}. There is no un-archive.</p>
+        <p className="callout warn">Archived on {archived.archivedAt.toISOString().replace('T', ' ').slice(0, 19)} UTC. Reason: {archived.reason}. There is no un-archive.</p>
       ) : (
-        <ActionForm action={archiveOrgAction.bind(null, ctx.slug)}>
-          <p>Archiving keeps every row and every page readable and refuses every new write: no publish, completion, score or link. It cannot be undone.</p>
-          <label>Reason <input name="reason" required maxLength={300} size={40} /></label>
-          <label>
-            Type <code>{ctx.slug}</code> to confirm <input name="confirm" autoComplete="off" required />
-          </label>
-          <button type="submit">Archive org</button>
-        </ActionForm>
+        <section className="card" aria-labelledby="arch-h">
+          <header><h2 id="arch-h">Archive</h2></header>
+          <div className="card-body">
+            <ActionForm action={archiveOrgAction.bind(null, ctx.slug)}>
+              <p className="callout warn">Archiving keeps every row and every page readable and refuses every new write: no publish, completion, score or link. It cannot be undone.</p>
+              <div className="form-row">
+                <label className="field"><span>Reason</span><input name="reason" required maxLength={300} size={40} /></label>
+                <label className="field"><span>Type <code>{ctx.slug}</code> to confirm</span><input name="confirm" autoComplete="off" required /></label>
+                <button type="submit" className="btn-danger">Archive org</button>
+              </div>
+            </ActionForm>
+          </div>
+        </section>
       )}
     </main>
   );

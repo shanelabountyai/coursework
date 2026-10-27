@@ -1,4 +1,4 @@
-# Design brief — Coursework (2026-10-27)
+# Design brief — Coursework (2026-10-27) — SUPERSEDED by `docs/design-system-plan.md` (D-69)
 
 No design existed: Phase 3 shipped a plain stylesheet (`src/app/globals.css`, 50 lines, system font, blue links) on purpose, so the proofs came first. This brief and the stylesheet that implements it close that gap. **CSS only**: no markup, component, dependency or font download changed, so no e2e selector can move.
 

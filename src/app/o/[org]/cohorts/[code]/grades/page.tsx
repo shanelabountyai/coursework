@@ -11,6 +11,7 @@ import { lateAdjustedHp } from '@/grades/grade';
 import { mul, rational, roundHalfUp, toString as ratText, type Rational } from '@/grades/rational';
 import { cmpStr } from '@/graph/types';
 import { ScopeNote } from '@/app/ui/scope-note';
+import { Pill } from '@/app/ui/status';
 import { correctScoreAction, recordScoreAction } from '../../actions';
 
 export const metadata = { title: 'Gradebook' };
@@ -41,60 +42,75 @@ export default async function Grades({ params, searchParams }: { params: Promise
 
   return (
     <main>
-      <h1>Gradebook · {cohort.code}</h1>
+      <header className="page-head">
+        <div>
+          <p className="eyebrow"><Link href={`/o/${ctx.slug}/cohorts`}>Cohorts</Link> / {cohort.code}</p>
+          <h1>Gradebook · {cohort.code}</h1>
+          <p className="lede">Scores are whole hundredths of a percent and the arithmetic is exact. The final grade rounds once, half-up, at the end.</p>
+        </div>
+        <div className="actions"><Link href={`/o/${ctx.slug}/cohorts/${cohort.code}/drip`}>Drip calendar</Link></div>
+      </header>
       {scheme && (
-        <p>
+        <p className="callout">
           Scheme <strong>{scheme.id}</strong>: {scheme.categories.map((c) => `${c.code} ${hpText(c.weight_bp)}%${c.drop_lowest ? ` (drop ${c.drop_lowest})` : ''}`).join(' · ')}; late −{hpText(scheme.late.per_day_hp)} per day up to {scheme.late.max_days} days;
           missing work {scheme.missing}; pass at {hpText(scheme.pass_threshold_hp)}. The final is exact until one half-up rounding (S8).
         </p>
       )}
-      <table>
-        <thead>
-          <tr>
-            <th scope="col">Learner</th>
-            {assignments.map((a) => <th scope="col" key={a.code} className="num">{a.code}<span className="muted"> {a.category}</span></th>)}
-            {scheme?.categories.map((c) => <th scope="col" key={c.code}>{c.code} ratio</th>)}
-            <th scope="col" className="num">Final</th><th scope="col">Letter</th><th scope="col">Pass</th><th scope="col">Flags</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map(({ l, scheme: s, grade }) => (
-            <tr key={l.id}>
-              <th scope="row">{self ? l.code : <Link href={`${base}?learner=${l.code}`}>{l.code}</Link>}</th>
-              {assignments.map((a) => {
-                const sub = current.get(`${l.id}|${a.code}`);
-                if (!sub) return <td key={a.code} className="num muted">missing</td>;
-                const late = lateAdjustedHp(sub.scoreHp, a.due_day, sub.submittedDay, s.late);
-                const dropped = grade.flags.some((f) => f.startsWith(`DROPPED:${a.category}:`) && f.split(':')[2]!.split('+').includes(a.code));
-                return (
-                  <td key={a.code} className="num">
-                    {dropped ? <s>{hpText(sub.scoreHp)}</s> : hpText(sub.scoreHp)}
-                    {late.daysLate > 0 && <span className="warn"> → {hpText(Number(late.adjusted))} ({late.daysLate}d late)</span>}
-                    {dropped && <span className="muted"> dropped</span>}
-                    {sub.supersedesId && <span className="muted"> (corrected)</span>}
+      <section className="card" aria-labelledby="book-h">
+        <header><h2 id="book-h">{rows.length} learners</h2><p>Scroll sideways for every assignment; the learner column stays put.</p></header>
+        <div className="table-wrap">
+          <table className="table--matrix">
+            <caption>Scores, category ratios and the final grade</caption>
+            <thead>
+              <tr>
+                <th scope="col">Learner</th>
+                {assignments.map((a) => <th scope="col" key={a.code} className="num">{a.code}<span className="muted"> {a.category}</span></th>)}
+                {scheme?.categories.map((c) => <th scope="col" key={c.code}>{c.code} ratio</th>)}
+                <th scope="col" className="num">Final</th><th scope="col">Letter</th><th scope="col">Pass</th><th scope="col">Flags</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map(({ l, scheme: s, grade }) => (
+                <tr key={l.id}>
+                  <th scope="row">{self ? l.code : <Link href={`${base}?learner=${l.code}`}>{l.code}</Link>}</th>
+                  {assignments.map((a) => {
+                    const sub = current.get(`${l.id}|${a.code}`);
+                    if (!sub) return <td key={a.code} className="num muted">missing</td>;
+                    const late = lateAdjustedHp(sub.scoreHp, a.due_day, sub.submittedDay, s.late);
+                    const dropped = grade.flags.some((f) => f.startsWith(`DROPPED:${a.category}:`) && f.split(':')[2]!.split('+').includes(a.code));
+                    return (
+                      <td key={a.code} className="num">
+                        {dropped ? <s>{hpText(sub.scoreHp)}</s> : hpText(sub.scoreHp)}
+                        {late.daysLate > 0 && <span className="warn"> → {hpText(Number(late.adjusted))} ({late.daysLate}d late)</span>}
+                        {dropped && <span className="muted"> dropped</span>}
+                        {sub.supersedesId && <span className="muted"> (corrected)</span>}
+                      </td>
+                    );
+                  })}
+                  {s.categories.map((c) => {
+                    const r = grade.categories.get(c.code) ?? null;
+                    return <td key={c.code} className="mono">{r ? `${ratText(r)} = ${pct(r)}` : 'empty'}</td>;
+                  })}
+                  <td className="num">
+                    <strong>{hpText(grade.final_hp)}</strong>
+                    <details><summary>exact</summary><span className="mono">{grade.exactText}</span></details>
                   </td>
-                );
-              })}
-              {s.categories.map((c) => {
-                const r = grade.categories.get(c.code) ?? null;
-                return <td key={c.code} className="mono">{r ? `${ratText(r)} = ${pct(r)}` : 'empty'}</td>;
-              })}
-              <td className="num">
-                <strong>{hpText(grade.final_hp)}</strong>
-                <details><summary>exact</summary><span className="mono">{grade.exactText}</span></details>
-              </td>
-              <td>{grade.letter}</td>
-              <td className={grade.passed ? 'ok' : 'bad'}>{grade.passed ? 'pass' : 'fail'}</td>
-              <td className="mono">{grade.flags.join(' ')}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                  <td>{grade.letter}</td>
+                  <td><Pill tone={grade.passed ? 'ok' : 'bad'}>{grade.passed ? 'pass' : 'fail'}</Pill></td>
+                  <td><div className="chips">{grade.flags.map((f) => <Pill key={f}>{f}</Pill>)}</div></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
       {focus && (
-        <section aria-labelledby="detail-h" className="panel">
-          <h2 id="detail-h">{focus.code} · {focus.name}: every score row</h2>
+        <section aria-labelledby="detail-h" className="card">
+          <header><h2 id="detail-h">{focus.code} · {focus.name}: every score row</h2><p>Corrections keep the old row.</p></header>
+          <div className="table-wrap">
           <table>
+            <caption>One row per assignment</caption>
             <thead><tr><th scope="col">Assignment</th><th scope="col">Rows (oldest first)</th>{results && <th scope="col">Enter or correct</th>}</tr></thead>
             <tbody>
               {assignments.map((a) => {
@@ -113,9 +129,9 @@ export default async function Grades({ params, searchParams }: { params: Promise
                         {cur ? (
                           <ActionForm action={correctScoreAction.bind(null, ctx.slug)}>
                             <input type="hidden" name="submissionId" value={cur.id} />
-                            <label>New % <input name="score" required size={6} inputMode="decimal" aria-label={`New score for ${a.code}`} /></label>
-                            <label>Reason <input name="reason" required size={18} aria-label={`Reason for correcting ${a.code}`} /></label>
-                            <button type="submit" aria-label={`Correct ${a.code}`}>Correct</button>
+                            <label className="field"><span>New %</span><input name="score" required size={6} inputMode="decimal" aria-label={`New score for ${a.code}`} /></label>
+                            <label className="field"><span>Reason</span><input name="reason" required size={18} aria-label={`Reason for correcting ${a.code}`} /></label>
+                            <button type="submit" className="btn-secondary" aria-label={`Correct ${a.code}`}>Correct</button>
                           </ActionForm>
                         ) : (
                           <RecordForm slug={ctx.slug} cohortId={cohort.id} learnerId={focus.id} assignmentCode={a.code} />
@@ -127,6 +143,7 @@ export default async function Grades({ params, searchParams }: { params: Promise
               })}
             </tbody>
           </table>
+          </div>
         </section>
       )}
       <ScopeNote />
@@ -141,8 +158,8 @@ async function RecordForm(p: { slug: string; cohortId: string; learnerId: string
       <input type="hidden" name="cohortId" value={p.cohortId} />
       <input type="hidden" name="learnerId" value={p.learnerId} />
       <input type="hidden" name="assignmentId" value={a.id} />
-      <label>Score % <input name="score" required size={6} inputMode="decimal" aria-label={`Score for ${p.assignmentCode}`} /></label>
-      <label>Submitted <input name="submittedDay" required placeholder="YYYY-MM-DD" size={11} aria-label={`Submitted day for ${p.assignmentCode}`} /></label>
+      <label className="field"><span>Score %</span><input name="score" required size={6} inputMode="decimal" aria-label={`Score for ${p.assignmentCode}`} /></label>
+      <label className="field"><span>Submitted</span><input name="submittedDay" required placeholder="YYYY-MM-DD" size={11} aria-label={`Submitted day for ${p.assignmentCode}`} /></label>
       <button type="submit" aria-label={`Record ${p.assignmentCode}`}>Record</button>
     </ActionForm>
   );

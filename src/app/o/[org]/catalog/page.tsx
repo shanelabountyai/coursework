@@ -11,6 +11,7 @@ import type { Grandfathered } from '@/graph/retro';
 import { courseMap } from '@/graph/types';
 import { exprText } from '@/app/ui/expr';
 import { ScopeNote } from '@/app/ui/scope-note';
+import { Pill } from '@/app/ui/status';
 import { discardDraftAction, publishDraftAction, saveDraftAction } from './actions';
 import { CatalogEditor } from './editor';
 
@@ -32,11 +33,20 @@ export default async function CatalogPage({ params }: { params: Promise<{ org: s
   const byCode = courseMap(catalog);
   return (
     <main>
-      <h1>Catalog</h1>
-      <p>
-        Current version <strong>{current.label}</strong> <code title={current.hash}>{current.hash.slice(0, 12)}…</code>: {catalog.courses.length} courses,{' '}
-        {catalog.certificates.length} certificates, {catalog.equivalencies.length} equivalencies. <Link href={`/o/${ctx.slug}/catalog/versions`}>All {versions} versions and attempts</Link>
-      </p>
+      <header className="page-head">
+        <div>
+          <p className="eyebrow">Catalog · {current.label}</p>
+          <h1>Catalog</h1>
+          <p className="lede">Change a prerequisite, read the verdict, then publish a new version. Published versions are never edited.</p>
+        </div>
+        <div className="actions"><Link href={`/o/${ctx.slug}/catalog/versions`}>All {versions} versions and attempts</Link></div>
+      </header>
+      <div className="stats">
+        <div className="stat"><span className="stat-num">{catalog.courses.length}</span><span className="stat-label">Courses</span><span className="stat-note">in {current.label}</span></div>
+        <div className="stat"><span className="stat-num">{catalog.certificates.length}</span><span className="stat-label">Certificates</span></div>
+        <div className="stat"><span className="stat-num">{catalog.equivalencies.length}</span><span className="stat-label">Equivalencies</span></div>
+        <div className="stat"><span className="stat-num">{attempts.length}</span><span className="stat-label">Recent attempts</span><span className="stat-note"><code title={current.hash}>{current.hash.slice(0, 12)}…</code></span></div>
+      </div>
       {canEditCatalog(ctx) && !archived && (
         <CatalogEditor
           base={base.catalog}
@@ -48,33 +58,43 @@ export default async function CatalogPage({ params }: { params: Promise<{ org: s
           publish={publishDraftAction.bind(null, ctx.slug)}
         />
       )}
-      <h2>Recent publish attempts</h2>
-      {attempts.length ? (
-        <table>
-          <thead><tr><th scope="col">When (UTC)</th><th scope="col">From</th><th scope="col">Verdict</th><th scope="col">Cycles</th><th scope="col" className="num">Grandfathered</th></tr></thead>
-          <tbody>
-            {attempts.map((a) => (
-              <tr key={a.id}>
-                <td className="mono">{a.createdAt.toISOString().replace('T', ' ').slice(0, 19)}</td>
-                <td>{a.fromVersion.label}</td>
-                <td className={a.result === 'ACCEPT' ? 'ok' : 'bad'}>{a.result}</td>
-                <td className="mono">{(a.cycles as string[][]).map((c) => c.join(' -> ')).join('; ')}</td>
-                <td className="num">{(a.grandfathered as unknown as Grandfathered[]).length}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : <p className="muted">No attempts yet.</p>}
-      <h2>Courses of {current.label} in topological order (G4)</h2>
-      <table>
-        <thead><tr><th scope="col">Code</th><th scope="col">Title</th><th scope="col">Status</th><th scope="col">Prerequisite</th></tr></thead>
-        <tbody>
-          {topo.map((code) => {
-            const c = byCode.get(code)!;
-            return <tr key={code}><td className="mono">{code}</td><td>{c.title}</td><td>{c.status}</td><td className="mono">{exprText(c.prereq)}</td></tr>;
-          })}
-        </tbody>
-      </table>
+      <section className="card" aria-labelledby="attempts-h">
+        <header><h2 id="attempts-h">Recent publish attempts</h2></header>
+        {attempts.length ? (
+          <div className="table-wrap">
+            <table>
+              <caption className="muted">The last {attempts.length} attempts, newest first</caption>
+              <thead><tr><th scope="col">When (UTC)</th><th scope="col">From</th><th scope="col">Verdict</th><th scope="col">Cycles</th><th scope="col" className="num">Grandfathered</th></tr></thead>
+              <tbody>
+                {attempts.map((a) => (
+                  <tr key={a.id}>
+                    <td className="date">{a.createdAt.toISOString().replace('T', ' ').slice(0, 19)}</td>
+                    <td>{a.fromVersion.label}</td>
+                    <td><Pill>{a.result}</Pill></td>
+                    <td className="mono">{(a.cycles as string[][]).map((c) => c.join(' -> ')).join('; ')}</td>
+                    <td className="num">{(a.grandfathered as unknown as Grandfathered[]).length}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : <p className="empty">No attempts yet. The first publish, accepted or refused, is recorded here.</p>}
+      </section>
+      <section className="card" aria-labelledby="courses-h">
+        <header><h2 id="courses-h">Courses of {current.label}</h2><p>Topological order (G4): every course comes after its prerequisites.</p></header>
+        <div className="table-wrap">
+          <table>
+            <caption className="muted">{catalog.courses.length} courses</caption>
+            <thead><tr><th scope="col">Code</th><th scope="col">Title</th><th scope="col">Status</th><th scope="col">Prerequisite</th></tr></thead>
+            <tbody>
+              {topo.map((code) => {
+                const c = byCode.get(code)!;
+                return <tr key={code}><td className="mono">{code}</td><td>{c.title}</td><td><Pill tone={c.status === 'PUBLISHED' ? 'ok' : 'neutral'}>{c.status}</Pill></td><td className="mono">{exprText(c.prereq)}</td></tr>;
+              })}
+            </tbody>
+          </table>
+        </div>
+      </section>
       <ScopeNote />
     </main>
   );

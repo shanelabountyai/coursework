@@ -5,6 +5,7 @@ import { isStaff } from '@/course/access';
 import type { PublishError } from '@/graph/publish';
 import type { Grandfathered } from '@/graph/retro';
 import { ScopeNote } from '@/app/ui/scope-note';
+import { Pill } from '@/app/ui/status';
 
 export const metadata = { title: 'Catalog versions' };
 
@@ -21,18 +22,23 @@ export default async function Versions({ params }: { params: Promise<{ org: stri
   const actors = new Map((await db.user.findMany({ where: { id: { in: versions.flatMap((v) => [v.actorUserId, ...v.publishAttempts.map((a) => a.actorUserId)]).filter((x): x is string => !!x) } }, select: { id: true, email: true } })).map((u) => [u.id, u.email]));
   return (
     <main>
-      <h1>Catalog versions</h1>
-      <p>{versions.length} versions; {versions.reduce((n, v) => n + v.publishAttempts.length, 0)} publish attempts. A version is never edited: an accepted edit is a new version whose parent is the one it was applied to.</p>
+      <header className="page-head">
+        <div>
+          <p className="eyebrow">Catalog / versions</p>
+          <h1>Catalog versions</h1>
+          <p className="lede">{versions.length} versions; {versions.reduce((n, v) => n + v.publishAttempts.length, 0)} publish attempts. A version is never edited: an accepted edit is a new version whose parent is the one it was applied to.</p>
+        </div>
+      </header>
       {versions.map((v) => (
-        <section key={v.id} aria-labelledby={`v-${v.id}`} className="panel">
-          <h2 id={`v-${v.id}`}>
-            {v.label} <code title={v.hash}>{v.hash.slice(0, 16)}…</code>
+        <section key={v.id} aria-labelledby={`v-${v.id}`} className="card">
+          <header><h2 id={`v-${v.id}`}>
+            {v.label} <code className="muted" title={v.hash}>{v.hash.slice(0, 16)}…</code>
           </h2>
-          <p className="muted">
+          <p>
             Parent: {v.parent?.label ?? 'none (first version)'} · by {v.actorUserId ? actors.get(v.actorUserId) ?? 'a deleted user' : 'the seed'} · {v.createdAt.toISOString().replace('T', ' ').slice(0, 19)} UTC
-          </p>
+          </p></header>
           {v.publishAttempts.length > 0 && (
-            <table>
+            <div className="table-wrap"><table>
               <caption>Attempts against {v.label}</caption>
               <thead><tr><th scope="col">Edit</th><th scope="col">Verdict</th><th scope="col">Errors</th><th scope="col" className="num">Grandfathered</th><th scope="col">Result</th></tr></thead>
               <tbody>
@@ -41,7 +47,7 @@ export default async function Versions({ params }: { params: Promise<{ org: stri
                   return (
                     <tr key={a.id}>
                       <td><details><summary>{edit.id ?? 'edit'} ({edit.ops?.length ?? 0} ops)</summary><pre className="mono">{JSON.stringify(edit.ops, null, 1)}</pre></details></td>
-                      <td className={a.result === 'ACCEPT' ? 'ok' : 'bad'}>{a.result}</td>
+                      <td><Pill>{a.result}</Pill></td>
                       <td>{(a.errors as unknown as PublishError[]).map((e) => `${e.code}: ${e.detail}`).join('; ') || '—'}</td>
                       <td className="num">{(a.grandfathered as unknown as Grandfathered[]).length}</td>
                       <td>{a.resultVersionId ? labelOf.get(a.resultVersionId) ?? '—' : '—'}</td>
@@ -49,7 +55,7 @@ export default async function Versions({ params }: { params: Promise<{ org: stri
                   );
                 })}
               </tbody>
-            </table>
+            </table></div>
           )}
         </section>
       ))}

@@ -15,12 +15,23 @@ export default async function Orgs() {
   });
   return (
     <main>
-      <h1>Your orgs</h1>
-      <p>Signed in as {s.email} · <Link href="/onboarding">Create an org or see invitations</Link> · <Link href="/account/security">Account</Link></p>
+      <header className="page-head">
+        <div>
+          <p className="eyebrow">Account</p>
+          <h1>Your orgs</h1>
+          <p className="lede">Signed in as {s.email} · <Link href="/onboarding">Create an org or see invitations</Link> · <Link href="/account/security">Account</Link></p>
+        </div>
+      </header>
       {memberships.length ? (
-        <ul>{memberships.map((m) => <li key={m.org.slug}><Link href={`/o/${m.org.slug}`}>{m.org.name}</Link> ({m.role})</li>)}</ul>
+        <div className="grid">
+          {memberships.map((m) => (
+            <section key={m.org.slug} className="card">
+              <header><h2><Link href={`/o/${m.org.slug}`}>{m.org.name}</Link></h2><p>{m.role}</p></header>
+            </section>
+          ))}
+        </div>
       ) : (
-        <p>No active orgs. Archived orgs are not listed here.</p>
+        <p className="callout">No active orgs. Archived orgs are not listed here.</p>
       )}
     </main>
   );

@@ -58,97 +58,115 @@ export function CatalogEditor(props: {
     setStatus(base.courses.find((c) => c.code === code)?.status ?? 'PUBLISHED');
   };
 
+  const tone = problem ? 'refuse' : live.check ? (live.check.result === 'ACCEPT' ? 'accept' : 'refuse') : '';
   return (
-    <section aria-labelledby="editor-h">
-      <h2 id="editor-h">Edit (draft on {base.version})</h2>
-      {ops.length > 0 && (
-        <ol aria-label="Draft operations">
-          {ops.map((o, i) => (
-            <li key={i}>
-              <code>{describe(o)}</code>{' '}
-              <button type="button" onClick={() => setOps(ops.filter((_, j) => j !== i))}>Remove</button>
-            </li>
-          ))}
-        </ol>
-      )}
-      <div className="panel">
-        <label htmlFor="op-kind">Operation</label>{' '}
-          <select id="op-kind" value={kind} onChange={(e) => setKind(e.target.value as Kind)}>
-            <option value="set_prereq">Set prerequisite</option>
-            <option value="set_status">Set status</option>
-            <option value="add_course">Add course</option>
-          </select>{' '}
-        {kind === 'add_course' ? (
-          <>
-            <label>New code <input value={newCode} onChange={(e) => setNewCode(e.target.value.toUpperCase())} placeholder="ACC-203" size={9} /></label>
-            <label>Title <input value={title} onChange={(e) => setTitle(e.target.value)} size={24} /></label>
-          </>
-        ) : (
-          <>
-            <label htmlFor="op-course">Course</label>{' '}
-            <select id="op-course" value={course} onChange={(e) => pickCourse(e.target.value)}>
-              {codes.map((c) => <option key={c} value={c}>{c}</option>)}
-            </select>{' '}
-          </>
+    <section className="card" aria-labelledby="editor-h">
+      <header>
+        <h2 id="editor-h">Edit (draft on {base.version})</h2>
+        <p>Operations apply in order. The check runs in your browser on every change; the server runs it again at publish.</p>
+      </header>
+      <div className="card-body">
+        {ops.length > 0 && (
+          <ol aria-label="Draft operations" className="stack">
+            {ops.map((o, i) => (
+              <li key={i}>
+                <code>{describe(o)}</code>{' '}
+                <button type="button" className="btn-quiet" onClick={() => setOps(ops.filter((_, j) => j !== i))}>Remove</button>
+              </li>
+            ))}
+          </ol>
         )}
-        {kind !== 'set_prereq' && (
-          <>
-            <label htmlFor="op-status">Status</label>{' '}
-            <select id="op-status" value={status} onChange={(e) => setStatus(e.target.value as Status)}>
-              {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
-            </select>{' '}
-          </>
-        )}
+        <div className="form-row">
+          <div className="field">
+            <label htmlFor="op-kind">Operation</label>
+            <select id="op-kind" value={kind} onChange={(e) => setKind(e.target.value as Kind)}>
+              <option value="set_prereq">Set prerequisite</option>
+              <option value="set_status">Set status</option>
+              <option value="add_course">Add course</option>
+            </select>
+          </div>
+          {kind === 'add_course' ? (
+            <>
+              <label className="field"><span>New code</span><input value={newCode} onChange={(e) => setNewCode(e.target.value.toUpperCase())} placeholder="ACC-203" size={9} /></label>
+              <label className="field"><span>Title</span><input value={title} onChange={(e) => setTitle(e.target.value)} size={24} /></label>
+            </>
+          ) : (
+            <div className="field">
+              <label htmlFor="op-course">Course</label>
+              <select id="op-course" value={course} onChange={(e) => pickCourse(e.target.value)}>
+                {codes.map((c) => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
+          )}
+          {kind !== 'set_prereq' && (
+            <div className="field">
+              <label htmlFor="op-status">Status</label>
+              <select id="op-status" value={status} onChange={(e) => setStatus(e.target.value as Status)}>
+                {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
+              </select>
+            </div>
+          )}
+        </div>
         {kind !== 'set_status' && (
-          <label>
-            Prerequisite <input value={prereq} onChange={(e) => setPrereq(e.target.value)} size={48} className="mono" aria-describedby="expr-help" />
+          <label className="field">
+            <span>Prerequisite</span>
+            <input value={prereq} onChange={(e) => setPrereq(e.target.value)} size={48} className="mono" aria-describedby="expr-help" />
+            <span id="expr-help" className="hint">A course code, <code>none</code>, or JSON: <code>{'{"all":["ACC-101",{"any":["ACC-102","DAT-101"]}]}'}</code> (two levels at most, alternating kinds).</span>
           </label>
         )}
-        <p id="expr-help" className="muted">A course code, <code>none</code>, or JSON: <code>{'{"all":["ACC-101",{"any":["ACC-102","DAT-101"]}]}'}</code> (two levels at most, alternating kinds).</p>
-        <button type="button" disabled={!pending.op || !!live.problem} onClick={() => pending.op && setOps([...ops, pending.op])}>Add to draft</button>
-      </div>
+        <div className="actions">
+          <button type="button" className="btn-secondary" disabled={!pending.op || !!live.problem} onClick={() => pending.op && setOps([...ops, pending.op])}>Add to draft</button>
+        </div>
 
-      <div aria-live="polite" data-testid="live-verdict">
-        <h3>Live check (G1–G5, in your browser)</h3>
-        {problem ? (
-          <p className="bad">Cannot apply: {problem}</p>
-        ) : live.check ? (
-          <>
-            <p>
-              Verdict: <strong className={live.check.result === 'ACCEPT' ? 'ok' : 'bad'}>{live.check.result}</strong>
-              {changesNothing && <span className="muted"> (no change from {base.version} yet)</span>}
-            </p>
-            {live.check.cycles.length > 0 && (
-              <ul aria-label="Cycle paths">
-                {live.check.cycles.map((c) => <li key={c.join()} className="mono">{c.join(' -> ')}</li>)}
-              </ul>
-            )}
-            {live.check.errors.length > 0 && (
-              <table>
-                <caption className="muted">Every error, in stage order</caption>
-                <thead><tr><th scope="col">Code</th><th scope="col">Detail</th></tr></thead>
-                <tbody>{live.check.errors.map((e, i) => <tr key={i}><td className="mono">{e.code}</td><td>{e.detail}</td></tr>)}</tbody>
-              </table>
-            )}
-          </>
-        ) : null}
-      </div>
+        <div data-testid="live-verdict" className={`verdict ${tone}`}>
+          {problem ? (
+            <p role="status" aria-atomic="true" className="verdict-line bad">Cannot apply: {problem}</p>
+          ) : live.check ? (
+            <>
+              <p role="status" aria-atomic="true" className="verdict-line">
+                Verdict: <strong>{live.check.result}</strong>
+                {changesNothing && <span className="muted"> (no change from {base.version} yet)</span>}
+              </p>
+              {live.check.cycles.length > 0 && (
+                <ul aria-label="Cycle paths" className="chips">
+                  {live.check.cycles.map((c) => <li key={c.join()} className="chip">{c.join(' -> ')}</li>)}
+                </ul>
+              )}
+              {live.check.errors.length > 0 && (
+                <div className="table-wrap">
+                  <table>
+                    <caption>Every error, in stage order (G1–G5)</caption>
+                    <thead><tr><th scope="col">Code</th><th scope="col">Detail</th></tr></thead>
+                    <tbody>{live.check.errors.map((e, i) => <tr key={i}><td className="mono">{e.code}</td><td>{e.detail}</td></tr>)}</tbody>
+                  </table>
+                </div>
+              )}
+            </>
+          ) : null}
+        </div>
 
-      <ActionForm action={props.publish}>
-        <input type="hidden" name="baseVersionId" value={props.baseVersionId} />
-        <input type="hidden" name="ops" value={JSON.stringify(effective)} />
-        <label>New version name <input name="label" defaultValue={props.suggestedLabel} required maxLength={40} size={12} /></label>
-        <button type="submit" disabled={!accepted}>Publish</button>
-        {!accepted && <span className="muted"> Publish is enabled when the draft changes the catalog and the live verdict is ACCEPT.</span>}
-      </ActionForm>
-      <ActionForm action={props.save}>
-        <input type="hidden" name="baseVersionId" value={props.baseVersionId} />
-        <input type="hidden" name="ops" value={JSON.stringify(effective)} />
-        <button type="submit" disabled={!!problem}>Save draft</button>
-      </ActionForm>
-      <ActionForm action={props.discard}>
-        <button type="submit">Discard saved draft</button>
-      </ActionForm>
+        <ActionForm action={props.publish}>
+          <input type="hidden" name="baseVersionId" value={props.baseVersionId} />
+          <input type="hidden" name="ops" value={JSON.stringify(effective)} />
+          <div className="form-row">
+            <label className="field"><span>New version name</span><input name="label" defaultValue={props.suggestedLabel} required maxLength={40} size={12} /></label>
+            <button type="submit" disabled={!accepted}>Publish</button>
+            <span className="muted">Publish will apply {effective.length} operation{effective.length === 1 ? '' : 's'}.</span>
+          </div>
+          {!accepted && <p className="hint muted">Publish is enabled when the draft changes the catalog and the live verdict is ACCEPT.</p>}
+        </ActionForm>
+        <p className="callout warn">Learners already enrolled keep their path under the version they started in. Anyone an edit would leave short of a prerequisite is reported as grandfathered when you publish; nobody is blocked.</p>
+        <div className="actions">
+          <ActionForm action={props.save}>
+            <input type="hidden" name="baseVersionId" value={props.baseVersionId} />
+            <input type="hidden" name="ops" value={JSON.stringify(effective)} />
+            <button type="submit" className="btn-secondary" disabled={!!problem}>Save draft</button>
+          </ActionForm>
+          <ActionForm action={props.discard}>
+            <button type="submit" className="btn-danger">Discard saved draft</button>
+          </ActionForm>
+        </div>
+      </div>
     </section>
   );
 }

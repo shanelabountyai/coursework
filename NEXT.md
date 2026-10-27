@@ -11,7 +11,7 @@ Still to do, in order:
 4. Cost review: not deployed, so only CI minutes; record keep/off in `docs/decisions.md`.
 5. Still open for Shane: review D-51..D-68 and merge PR #1 (or don't); the D-58 org-list hook upstream.
 
-Design: `docs/design-brief.md` + `src/app/globals.css` restyle (CSS only, 2026-10-27); e2e coursework.spec 7/7 incl. axe in both schemes. Not eyeballed in a browser by the agent: Shane to look.
+Design: D-69 design system applied 2026-10-27 (`docs/design-system-plan.md` v2, `globals.css`, `src/app/ui/{status,nav-link}.tsx`, 9 page files). Gate: lint, typecheck, engine:lint, drift, npm test 299, e2e 16/16 with axe. Screenshots at 1280 and 400 viewed for home, catalog, learner, grades. Deferred: plain-word status labels + glossary, pre-publish grandfather count. Cost review is now D-70.
 
 Record every artifact URL in `docs/CLOSEOUT.md`.
 
