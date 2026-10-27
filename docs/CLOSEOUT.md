@@ -44,5 +44,5 @@ Payments · content hosting · sending anything (3.9 outbox notices dropped, D-6
 
 - [x] `docs/DEMO.md`
 - [x] Exec brief, *Coursework in Brief*: https://claude.ai/artifact/6HGL7P9KLq8wjHCUA8WiGy (private until Shane shares it; no screenshots yet, see NEXT.md)
-- [ ] LinkedIn drafts in the Ledger
-- [ ] Cost review (D-70)
+- [x] LinkedIn drafts in the Ledger (2026-10-27): #137 Scale "I changed one prerequisite in a sample course catalog…" and #138 Impact "One rule nobody wrote decided whether a learner passed or failed", both tagged `coursework` (no project chip yet, so the card shows the raw id), https://claude.ai/artifact/Ai5xKScgT2sWtqXRQ1ZA8i. Held back: the determinism run (`#B`), progress-never-stored (`#D`), the `v1.3.0` tag story (`#E`)
+- [x] Cost review (D-70): $0 by absence; CI only
