@@ -11,6 +11,8 @@ Still to do, in order:
 4. Cost review: not deployed, so only CI minutes; record keep/off in `docs/decisions.md`.
 5. Still open for Shane: review D-51..D-68 and merge PR #1 (or don't); the D-58 org-list hook upstream.
 
+Design: `docs/design-brief.md` + `src/app/globals.css` restyle (CSS only, 2026-10-27); e2e coursework.spec 7/7 incl. axe in both schemes. Not eyeballed in a browser by the agent: Shane to look.
+
 Record every artifact URL in `docs/CLOSEOUT.md`.
 
 ## Phase 3 handoff (2026-10-26), kept as written
