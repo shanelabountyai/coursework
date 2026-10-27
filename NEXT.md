@@ -5,7 +5,7 @@
 Closeout mechanics done 2026-10-27 (local, D-66..D-68): `v1.3.0` tag on origin and CI drift un-pinned; `axe-core` 4.13.0 declared; port 7400 confirmed and in the port table; PRD P0-3 corrected; CLONES.md row as a template PR. CI run for this head: see the last commit / PR #1 checks.
 
 Still to do, in order:
-1. `docs/DEMO.md`: demo script with screens, commands, accounts (`seed:school`), the acceptance numbers in `docs/CLOSEOUT.md`, troubleshooting, and what to concede up front. Run every command once.
+1. ~~`docs/DEMO.md`~~ DONE 2026-10-27 (commands run: fixtures:check, course:eval, progress:verify, seed:fixtures:test, progress:verify:db, seed:school:test, catalog:check x2, server health; the browser steps 2-5 mirror e2e/coursework.spec.ts, not clicked by hand). Was: demo script with screens, commands, accounts (`seed:school`), the acceptance numbers in `docs/CLOSEOUT.md`, troubleshooting, and what to concede up front. Run every command once.
 2. Exec brief `Coursework in Brief` (`exec-brief` skill), with the scope-honesty part near the top.
 3. LinkedIn drafts into the Ledger, mined from the defects (the CI red runs table in this file, the D-41 tag story, the 1.12 `engine:lint`-caught-the-comment run).
 4. Cost review: not deployed, so only CI minutes; record keep/off in `docs/decisions.md`.
