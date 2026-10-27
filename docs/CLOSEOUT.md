@@ -39,3 +39,10 @@ Payments · content hosting · sending anything (3.9 outbox notices dropped, D-6
 5. ~~Confirm port 7400; `CLONES.md` row~~ — 7400 confirmed (D-66); CLONES.md row opened as a template PR (D-68).
 6. ~~Correct PRD P0-3's drip check-order sentence~~ — done (D-68).
 7. ~~Decide O-9~~ — closed, not built (D-65); O-1..O-8 defaults still in force.
+
+## Closure deliverables (2026-10-27)
+
+- [x] `docs/DEMO.md`
+- [x] Exec brief, *Coursework in Brief*: https://claude.ai/artifact/6HGL7P9KLq8wjHCUA8WiGy (private until Shane shares it; no screenshots yet, see NEXT.md)
+- [ ] LinkedIn drafts in the Ledger
+- [ ] Cost review (D-69)

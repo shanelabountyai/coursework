@@ -6,7 +6,7 @@ Closeout mechanics done 2026-10-27 (local, D-66..D-68): `v1.3.0` tag on origin a
 
 Still to do, in order:
 1. ~~`docs/DEMO.md`~~ DONE 2026-10-27 (commands run: fixtures:check, course:eval, progress:verify, seed:fixtures:test, progress:verify:db, seed:school:test, catalog:check x2, server health; the browser steps 2-5 mirror e2e/coursework.spec.ts, not clicked by hand). Was: demo script with screens, commands, accounts (`seed:school`), the acceptance numbers in `docs/CLOSEOUT.md`, troubleshooting, and what to concede up front. Run every command once.
-2. Exec brief `Coursework in Brief` (`exec-brief` skill), with the scope-honesty part near the top.
+2. ~~Exec brief~~ DONE: https://claude.ai/artifact/6HGL7P9KLq8wjHCUA8WiGy (private; no screenshots block, Quorum added its two later; share it; add the repo/live link if wanted).
 3. LinkedIn drafts into the Ledger, mined from the defects (the CI red runs table in this file, the D-41 tag story, the 1.12 `engine:lint`-caught-the-comment run).
 4. Cost review: not deployed, so only CI minutes; record keep/off in `docs/decisions.md`.
 5. Still open for Shane: review D-51..D-68 and merge PR #1 (or don't); the D-58 org-list hook upstream.
