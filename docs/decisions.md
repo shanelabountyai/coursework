@@ -156,3 +156,11 @@ Defaults the build session took while applying D-51..D-56 and building Phase 3; 
 | # | Decision | Why |
 |---|---|---|
 | D-65 | **O-9 closed: unlock notices are not built.** D-64's drop stands; nothing is queued for drip unlocks. The outbox pattern is shown in Quorum and Ledgerleave, where notices are part of the workflow. | Owner decision |
+
+## Closeout — 2026-10-27 (local session on the Mac, owner choices)
+
+| # | Decision | Why |
+|---|---|---|
+| D-66 | **Port 7400 confirmed** (closes D-5/D-33). It collides with no row in the port table; the table's next free hundred was 6300, but moving would touch package.json ×4, CI, e2e and README and invalidate the green e2e/CI history for no collision avoided. Row added to `~/.claude/CLAUDE.md`. | Owner pick, 2026-10-27 |
+| D-67 | **D-41 closed: `v1.3.0` tag pushed to `origin`** (e8c0f74…), so CI runs plain `npm run foundation:drift` against `FOUNDATION_VERSION`. **D-59 owner to-do done:** `axe-core` declared as a devDependency pinned to **4.13.0**, the version the 14 × 2 axe scans were proved on (npm's default would have taken 4.14.0). | Remove the pin and the transitive path |
+| D-68 | **PRD P0-3 corrected** to the brief's drip check order: NOT_ENROLLED → UNKNOWN_ITEM → NOT_RELEASED (R3, D-20); Phase 1 plan contradiction 5 closed. CLONES.md row opened as a PR on `saas-foundation`. | The brief and the oracle outrank the PRD |

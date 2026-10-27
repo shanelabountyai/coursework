@@ -65,7 +65,7 @@ Coursework treats the catalog as a versioned DAG whose publish step refuses cycl
 
 **P0-3: Drip release and derived progress** *(core learning artifact #3)*
 - [ ] Day arithmetic through `daysFromCivil`/`civilFromDays` only (D-8); lint bans `new Date(string)` and friends repo-wide
-- [ ] R1–R3: release day inclusive; `REJECT:NOT_RELEASED`, `REJECT:NOT_ENROLLED`, `REJECT:UNKNOWN_ITEM` in that check order; 2,051 verdicts equal `expected_drip.csv` (1,885 / 154 / 12)
+- [ ] R1–R3: release day inclusive; `REJECT:NOT_ENROLLED`, `REJECT:UNKNOWN_ITEM`, `REJECT:NOT_RELEASED` in that check order (enrollment → item → release, brief R3 / D-20); 2,051 verdicts equal `expected_drip.csv` (1,885 / 154 / 12)
 - [ ] P1: course and certificate progress derived on read; no `progress` column anywhere; `npm run progress:verify` recomputes 341 + 300 values and diffs
 - [ ] P2/V2: enrollments and completion events carry the catalog version; re-evaluation against another version is explicit and reports both answers
 

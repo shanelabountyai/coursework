@@ -33,9 +33,9 @@ Payments · content hosting · sending anything (3.9 outbox notices dropped, D-6
 ## By hand (Shane)
 
 1. Review D-51..D-64, `docs/phase-3-tasks.md` (status table) and this file; merge or not — the agent never merges.
-2. Push the `v1.3.0` tag from the Mac, then un-pin `foundation:drift --base e8c0f74…` in CI (D-41).
+2. ~~Push the `v1.3.0` tag; un-pin drift~~ — done 2026-10-27 (D-67).
 3. Upstream an org-list hook to `saas-foundation` so `/onboarding` can hide archived orgs (D-58).
-4. Declare `axe-core` as a devDependency (it is used transitively today, D-59).
-5. Confirm port 7400 in the port table; add the `CLONES.md` row (D-5, D-33).
-6. Correct PRD P0-3's drip check-order sentence (Phase 1 plan contradiction 5).
-7. Decide O-9 (outbox unlock notices) if wanted; O-1..O-8 defaults still in force.
+4. ~~Declare `axe-core` as a devDependency~~ — done, pinned 4.13.0 (D-67).
+5. ~~Confirm port 7400; `CLONES.md` row~~ — 7400 confirmed (D-66); CLONES.md row opened as a template PR (D-68).
+6. ~~Correct PRD P0-3's drip check-order sentence~~ — done (D-68).
+7. ~~Decide O-9~~ — closed, not built (D-65); O-1..O-8 defaults still in force.

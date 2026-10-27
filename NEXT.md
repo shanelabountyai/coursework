@@ -1,6 +1,21 @@
 # NEXT
 
-## ▶ State: decisions pass applied (D-51..D-56) and Phase 3 built on branch `kickoff` (PR #1, never merged). Stopped at the Phase 3 gate; `docs/CLOSEOUT.md` is the draft closeout (the PRD has no Phase 4).
+## ▶ Next item: closure deliverables (global "Definition of done")
+
+Closeout mechanics done 2026-10-27 (local, D-66..D-68): `v1.3.0` tag on origin and CI drift un-pinned; `axe-core` 4.13.0 declared; port 7400 confirmed and in the port table; PRD P0-3 corrected; CLONES.md row as a template PR. CI run for this head: see the last commit / PR #1 checks.
+
+Still to do, in order:
+1. `docs/DEMO.md`: demo script with screens, commands, accounts (`seed:school`), the acceptance numbers in `docs/CLOSEOUT.md`, troubleshooting, and what to concede up front. Run every command once.
+2. Exec brief `Coursework in Brief` (`exec-brief` skill), with the scope-honesty part near the top.
+3. LinkedIn drafts into the Ledger, mined from the defects (the CI red runs table in this file, the D-41 tag story, the 1.12 `engine:lint`-caught-the-comment run).
+4. Cost review: not deployed, so only CI minutes; record keep/off in `docs/decisions.md`.
+5. Still open for Shane: review D-51..D-68 and merge PR #1 (or don't); the D-58 org-list hook upstream.
+
+Record every artifact URL in `docs/CLOSEOUT.md`.
+
+## Phase 3 handoff (2026-10-26), kept as written
+
+### State then: decisions pass applied (D-51..D-56) and Phase 3 built on branch `kickoff` (PR #1, never merged). Stopped at the Phase 3 gate; `docs/CLOSEOUT.md` is the draft closeout (the PRD has no Phase 4).
 
 Unattended cloud session, 2026-10-26 (PHASE3-BRIEF, model `claude-opus-5-5`; commit attribution changed to Opus 5.5 as the brief says). **No fixture regeneration**: none of the owner's Coursework decisions (kit items 12–17) changes a rule, a golden case or a fixture; `fixtures/` and the brief §9 hashes are untouched.
 
