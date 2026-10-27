@@ -5,6 +5,7 @@ import { db } from '@/core/db';
 import { isStaff, viewerLearner } from '@/course/access';
 import { archiveOf } from '@/course/archive';
 import { ArchivedNote } from '@/app/ui/scope-note';
+import { Mark } from '@/app/ui/mark';
 import { NavLink } from '@/app/ui/nav-link';
 
 // Navigation only. Layouts do not re-run on every navigation, so each page calls requireOrg itself.
@@ -18,7 +19,7 @@ export default async function OrgLayout({ children, params }: { children: React.
   return (
     <>
       <nav aria-label="Org">
-        <strong>{org.name}</strong> · <NavLink href={base} exact>Home</NavLink>
+        <strong><Mark />{org.name}</strong> · <NavLink href={base} exact>Home</NavLink>
         {staff && <> · <NavLink href={`${base}/catalog`}>Catalog</NavLink> · <NavLink href={`${base}/learners`}>Learners</NavLink></>}
         {(staff || me) && <> · <NavLink href={`${base}/cohorts`}>Cohorts</NavLink></>}
         {me && <> · <NavLink href={`${base}/me`}>My path</NavLink></>}

@@ -67,7 +67,7 @@ code, .mono { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size:
 
 /* Navigation: primary links left, utility links right, active page underlined (aria-current set by NavLink). */
 nav { font-size: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 0 .1rem; margin: 0 calc(-1 * max(1rem, env(safe-area-inset-left, 0px))) 1.75rem; padding: .35rem max(1rem, env(safe-area-inset-left, 0px)); background: var(--panel); border-top: 4px solid var(--accent); border-bottom: 1px solid var(--line-strong); }
-nav strong { font-family: var(--serif); font-size: 1.15rem; font-weight: 600; margin-right: .75rem; white-space: nowrap; }
+nav strong { display: inline-flex; align-items: center; gap: .6rem; font-family: var(--serif); font-size: 1.15rem; font-weight: 600; margin-right: .75rem; white-space: nowrap; }
 nav a { font-size: .9rem; font-weight: 600; color: var(--fg); text-decoration: none; padding: .5rem .55rem; border-bottom: 2px solid transparent; white-space: nowrap; }
 nav a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 nav a[aria-current='page'] { border-bottom-color: var(--accent); color: var(--accent); }
