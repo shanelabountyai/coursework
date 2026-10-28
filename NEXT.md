@@ -1,8 +1,8 @@
 # NEXT
 
-## ▶ Next item: re-sync to saas-foundation v1.4.0 (optional)
+## ▶ Review PR: template-sync-main
 
-Blocked until Shane tags v1.4.0 on the template (remote's newest tag is v1.3.0; main holds the untagged v1.3.1 patch + `filterListedOrgs`). Then: `git fetch template --tags`, merge the tag, wire `filterListedOrgs` (src/app/org-hooks.ts) to hide archived orgs (closes D-58), run the full gate (npm test 299, e2e 16, course:eval 0 diffs, fixtures:check, engine:lint), record in decisions.md, open a PR (never self-merge).
+Merged template `main` (v1.4.0, untagged) into branch `template-sync-main`; `filterListedOrgs` wired (D-58 closed). Gate locally: lint, typecheck, engine:lint OK; npm test 334/51 files. `foundation:drift` fails until Shane tags v1.4.0 on the template (`bad revision v1.4.0`); e2e left to CI. Merge after tag + green CI.
 
 ## Previous: closure deliverables (all done)
 ### Closure deliverables (global "Definition of done")
