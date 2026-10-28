@@ -1,8 +1,8 @@
 # NEXT
 
-## ▶ Review PR: template-sync-main
+## ▶ Nothing queued
 
-Merged template `main` (v1.4.0, untagged) into branch `template-sync-main`; `filterListedOrgs` wired (D-58 closed). Gate locally: lint, typecheck, engine:lint OK; npm test 334/51 files. `foundation:drift` fails until Shane tags v1.4.0 on the template (`bad revision v1.4.0`); e2e left to CI. Merge after tag + green CI.
+All closed 2026-10-28: PR #1 and #2 merged, template v1.4.0 tagged (template and coursework), D-58 closed, CI green on main (run 40615944053: ci + modules-removed). Pick a new item only if Shane names one.
 
 ## Previous: closure deliverables (all done)
 ### Closure deliverables (global "Definition of done")
