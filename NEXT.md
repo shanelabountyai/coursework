@@ -1,6 +1,11 @@
 # NEXT
 
-## ▶ Next item: closure deliverables (global "Definition of done")
+## ▶ Next item: re-sync to saas-foundation v1.4.0 (optional)
+
+Blocked until Shane tags v1.4.0 on the template (remote's newest tag is v1.3.0; main holds the untagged v1.3.1 patch + `filterListedOrgs`). Then: `git fetch template --tags`, merge the tag, wire `filterListedOrgs` (src/app/org-hooks.ts) to hide archived orgs (closes D-58), run the full gate (npm test 299, e2e 16, course:eval 0 diffs, fixtures:check, engine:lint), record in decisions.md, open a PR (never self-merge).
+
+## Previous: closure deliverables (all done)
+### Closure deliverables (global "Definition of done")
 
 Closeout mechanics done 2026-10-27 (local, D-66..D-68): `v1.3.0` tag on origin and CI drift un-pinned; `axe-core` 4.13.0 declared; port 7400 confirmed and in the port table; PRD P0-3 corrected; CLONES.md row as a template PR. CI run for this head: see the last commit / PR #1 checks.
 
