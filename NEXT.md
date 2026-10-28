@@ -9,7 +9,7 @@ Still to do, in order:
 2. ~~Exec brief~~ DONE: https://claude.ai/artifact/6HGL7P9KLq8wjHCUA8WiGy (private; no screenshots block, Quorum added its two later; share it; add the repo/live link if wanted).
 3. ~~LinkedIn drafts~~ DONE: #137 and #138 in the Ledger (no Coursework chip; add `{id:"coursework",name:"Coursework"}` to PROJECTS in the Ledger page). Was: LinkedIn drafts into the Ledger, mined from the defects (the CI red runs table in this file, the D-41 tag story, the 1.12 `engine:lint`-caught-the-comment run).
 4. ~~Cost review~~ DONE (D-70). Was: not deployed, so only CI minutes; record keep/off in `docs/decisions.md`.
-5. DONE 2026-10-27: PR #1 merged (ee95e2c); Ledger `coursework` chip added (v75); D-58 hook upstreamed to saas-foundation (`visibleOrgIds`, untagged). Only left: tag saas-foundation and re-sync here when wanted.
+5. DONE 2026-10-27: PR #1 merged (ee95e2c); Ledger `coursework` chip added (v75); D-58 hook already upstreamed (`filterListedOrgs`, template v1.4.0). Only left: re-sync coursework to v1.4.0 and wire it, if wanted.
 
 Design: D-69 design system applied 2026-10-27 (`docs/design-system-plan.md` v2, `globals.css`, `src/app/ui/{status,nav-link}.tsx`, 9 page files). Gate: lint, typecheck, engine:lint, drift, npm test 299, e2e 16/16 with axe. Screenshots at 1280 and 400 viewed for home, catalog, learner, grades. Deferred: plain-word status labels + glossary, pre-publish grandfather count. Cost review is now D-70.
 
