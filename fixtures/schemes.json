@@ -1,0 +1,166 @@
+{
+  "schemes": [
+    {
+      "id": "SCH-STD",
+      "title": "Standard weighted",
+      "status": "PUBLISHED",
+      "categories": [
+        {
+          "code": "HW",
+          "name": "Homework",
+          "weight_bp": 3000,
+          "drop_lowest": 1
+        },
+        {
+          "code": "QZ",
+          "name": "Quizzes",
+          "weight_bp": 2000,
+          "drop_lowest": 1
+        },
+        {
+          "code": "PRJ",
+          "name": "Project",
+          "weight_bp": 2000,
+          "drop_lowest": 0
+        },
+        {
+          "code": "FIN",
+          "name": "Final Exam",
+          "weight_bp": 3000,
+          "drop_lowest": 0
+        }
+      ],
+      "late": {
+        "per_day_hp": 1000,
+        "max_days": 5
+      },
+      "extra_credit_cap_hp": 300,
+      "pass_threshold_hp": 7000,
+      "missing": "ZERO",
+      "bands": [
+        {
+          "min_hp": 9000,
+          "letter": "A"
+        },
+        {
+          "min_hp": 8000,
+          "letter": "B"
+        },
+        {
+          "min_hp": 7000,
+          "letter": "C"
+        },
+        {
+          "min_hp": 6000,
+          "letter": "D"
+        },
+        {
+          "min_hp": 0,
+          "letter": "F"
+        }
+      ]
+    },
+    {
+      "id": "SCH-LITE",
+      "title": "Participation-light",
+      "status": "PUBLISHED",
+      "categories": [
+        {
+          "code": "PART",
+          "name": "Participation",
+          "weight_bp": 1000,
+          "drop_lowest": 0
+        },
+        {
+          "code": "ASG",
+          "name": "Assignments",
+          "weight_bp": 5000,
+          "drop_lowest": 2
+        },
+        {
+          "code": "FIN",
+          "name": "Final Exam",
+          "weight_bp": 4000,
+          "drop_lowest": 0
+        }
+      ],
+      "late": {
+        "per_day_hp": 500,
+        "max_days": 10
+      },
+      "extra_credit_cap_hp": 500,
+      "pass_threshold_hp": 6500,
+      "missing": "EXCLUDE",
+      "bands": [
+        {
+          "min_hp": 9000,
+          "letter": "A"
+        },
+        {
+          "min_hp": 8000,
+          "letter": "B"
+        },
+        {
+          "min_hp": 7000,
+          "letter": "C"
+        },
+        {
+          "min_hp": 6000,
+          "letter": "D"
+        },
+        {
+          "min_hp": 0,
+          "letter": "F"
+        }
+      ]
+    },
+    {
+      "id": "SCH-BAD",
+      "title": "Draft with weights summing to 9900",
+      "status": "DRAFT",
+      "categories": [
+        {
+          "code": "HW",
+          "name": "Homework",
+          "weight_bp": 4000,
+          "drop_lowest": 0
+        },
+        {
+          "code": "FIN",
+          "name": "Final Exam",
+          "weight_bp": 5900,
+          "drop_lowest": 0
+        }
+      ],
+      "late": {
+        "per_day_hp": 1000,
+        "max_days": 5
+      },
+      "extra_credit_cap_hp": 0,
+      "pass_threshold_hp": 7000,
+      "missing": "ZERO",
+      "bands": [
+        {
+          "min_hp": 9000,
+          "letter": "A"
+        },
+        {
+          "min_hp": 8000,
+          "letter": "B"
+        },
+        {
+          "min_hp": 7000,
+          "letter": "C"
+        },
+        {
+          "min_hp": 6000,
+          "letter": "D"
+        },
+        {
+          "min_hp": 0,
+          "letter": "F"
+        }
+      ]
+    }
+  ]
+}

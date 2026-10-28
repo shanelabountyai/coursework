@@ -1,166 +1,167 @@
 # NEXT
 
-## ▶ v1.3.0 released 2026-10-14 (model: Opus — permissions)
+## ▶ Next item: closure deliverables (global "Definition of done")
 
-✅ **Good to clear.** `scorekeeper` role + `results.write` (D-21), a `security:` release for two INV-22/INV-28 latent defects
-the new role exposed. 172 tests pass (4 new), lint and typecheck clean; e2e and `check-modules` run in CI on the push and tag.
-Bracketry merged it the same day for L-040. **Every other clone owes v1.3.0 by 2026-10-21** (with v1.2.1, due 10-20), each in
-its own session.
+Closeout mechanics done 2026-10-27 (local, D-66..D-68): `v1.3.0` tag on origin and CI drift un-pinned; `axe-core` 4.13.0 declared; port 7400 confirmed and in the port table; PRD P0-3 corrected; CLONES.md row as a template PR. CI run for this head: see the last commit / PR #1 checks.
 
-## ▶ Next session here: talk4me is next in the older queue if picked up; storage SEC-01/02 runs in its own folder (Opus, money)
+Still to do, in order:
+1. ~~`docs/DEMO.md`~~ DONE 2026-10-27 (commands run: fixtures:check, course:eval, progress:verify, seed:fixtures:test, progress:verify:db, seed:school:test, catalog:check x2, server health; the browser steps 2-5 mirror e2e/coursework.spec.ts, not clicked by hand). Was: demo script with screens, commands, accounts (`seed:school`), the acceptance numbers in `docs/CLOSEOUT.md`, troubleshooting, and what to concede up front. Run every command once.
+2. ~~Exec brief~~ DONE: https://claude.ai/artifact/6HGL7P9KLq8wjHCUA8WiGy (private; no screenshots block, Quorum added its two later; share it; add the repo/live link if wanted).
+3. ~~LinkedIn drafts~~ DONE: #137 and #138 in the Ledger (no Coursework chip; add `{id:"coursework",name:"Coursework"}` to PROJECTS in the Ledger page). Was: LinkedIn drafts into the Ledger, mined from the defects (the CI red runs table in this file, the D-41 tag story, the 1.12 `engine:lint`-caught-the-comment run).
+4. ~~Cost review~~ DONE (D-70). Was: not deployed, so only CI minutes; record keep/off in `docs/decisions.md`.
+5. Still open for Shane: review D-51..D-68 and merge PR #1 (or don't); the D-58 org-list hook upstream.
 
-✅ **Good to clear.** **`v1.2.1` released and pushed 2026-10-13** (model: Opus — `security:` release). Four fixes from the
-2026-10-12 review, each with a red-first test: stale invites (`e47af9a`), the email-change oracle (`71b5fd8`), demo sessions
-(`2cc20a8`), and the owner's 2026-10-13 decision that a demo session also cannot create an org or use billing (`4cae624`).
-168 tests pass, typecheck and lint clean. No schema change. **Every clone owes this within 7 days (due 2026-10-20)**, each in
-its own session; `CLONES.md` rows stay as they are until each merges. Not run locally: `foundation:check-modules` and the
-e2e sweep (both build) — CI runs them on the push and on the tag.
+Design: D-69 design system applied 2026-10-27 (`docs/design-system-plan.md` v2, `globals.css`, `src/app/ui/{status,nav-link}.tsx`, 9 page files). Gate: lint, typecheck, engine:lint, drift, npm test 299, e2e 16/16 with axe. Screenshots at 1280 and 400 viewed for home, catalog, learner, grades. Deferred: plain-word status labels + glossary, pre-publish grandfather count. Cost review is now D-70.
 
-**Older checkpoint (superseded above):** **F-03 done and pushed 2026-09-28, tagged `v1.2.0`** (model: Sonnet — spec-following tooling, no new
-logic). A clone declares a module required in the clone-owned `src/app/required-modules.ts`; `foundation:check-modules`
-(`scripts/foundation-modules.ts`'s new `modulesToRemove()`) leaves that module in place and still removes the rest. 3 new
-unit tests (157 total pass), the filter mutation-checked red (dropped it, confirmed the test failed, restored). Verified
-for real, not just unit-tested: ran `foundation:check-modules` once with `notifications` required — passed with only
-billing removed and `notifications` left in place — and once with the template's default (nothing required) to confirm
-the existing CI job is unchanged. **Also fixed in passing:** `FOUNDATION_VERSION` was still `v1.1.0` — the `v1.1.1`
-release (`a121708`) never bumped it, a step the release process (`IMPLEMENTATION_PLAN.md` §3.3) requires; a clone created
-between those two commits would have stamped the wrong base version. Now `v1.2.0`, current.
-**Not done, on purpose:** callboard hasn't merged the release yet — that's callboard's own session, per the established
-pattern (it still owes `v1.1.0` and the `security:` `v1.1.1` too, due 2026-10-05). Its `CLONES.md` row stays `v1.0.1`
-until then.
+Record every artifact URL in `docs/CLOSEOUT.md`.
 
-**CI fixed 2026-09-28** (`37cf7c4`, model: Opus — real regression, not a stale-test triage). Root cause: `e2e/billing.spec.ts`
-still injected a cookie named `session` via `context.addCookies`; K1 (`a121708`) had renamed the real cookie to `__Host-session`.
-Fixed to the new name — but Chromium's CDP rejects a `__Host-` cookie set with a plain `http://` `url` field ("Invalid cookie
-fields"), so it's set via `domain: 'localhost', path: '/', secure: true` instead, which Chromium accepts and still sends over
-`http://localhost` (treated as a secure context). Verified: 10/10 e2e, 154/154 unit+integration, lint/typecheck clean, `gh run
-watch` on the push shows green. Clones (tradepost, pulseboard, callboard) can now safely take v1.1.1.
+## Phase 3 handoff (2026-10-26), kept as written
 
-✅ **Good to clear.** 6 of 8 LOWs fixed and pushed 2026-09-28 (`a121708`, tagged **`v1.1.1`**, model: Sonnet — `security:` release,
-**clones (tradepost, pulseboard, callboard) owe this within 7 days, by 2026-10-05**). 10 new tests (154 total pass, 1 file:
-`tests/integration/low-2026-09-28.test.ts`), each of the 5 test-covered fixes (K1 x2, K2, K5, K6, K13) mutation-checked red by
-reverting just that source file with the new test in place, confirming failure, then restoring — not just asserted done.
-Typecheck and lint clean.
-- **K1** (`session.ts`, `link.ts`): `signOutEverywhere`/`confirmEmailChange` now also spend the user's other unused sign-in
-  links, atomically with the session/email change. Cookie renamed `session` → `__Host-session`, `Secure` unconditional.
-- **K2** (`totp.ts`): `confirmTotp` now runs `assertFresh` and claims enrolment via a conditional `updateMany` on
-  `totpEnrolledAt: null`, so a concurrent second confirm loses the race instead of also minting 10 more recovery codes.
-- **K5** (`http.ts`): IPv6 rate-limit key now scoped to the address's first 64 bits, not the exact address.
-- **K6** (`orgs.ts`): `removeMember` now revokes that user's active share links in the org, same transaction as the delete.
-- **K13** (`invites.ts`, `links.ts`, `projects/actions.ts`): `addProject`, `createShareLink`, `revokeShareLink`,
-  `revokeInvite` now wrap their write and `audit()` call in one `db.$transaction`. Only `invites.ts` has direct mutation-check
-  coverage in the new test file; `links.ts`/`actions.ts` got the identical pattern, not separately mutation-checked.
-- **Not fixed, deferred on purpose** (see `audit/FOUNDATION-REVIEW-2026-09-26.md` LOW section): K13's `audit_append_only`
-  role separation (needs a second non-owner Postgres role — real infra change, add if the audit log ever needs to survive a
-  compromised app role) and the `.env.example`/drift tooling item (already accepted, documented behavior, D-19d).
-- **Not done, on purpose**: clone upgrade notes for v1.1.1 in tradepost/pulseboard/callboard's own `NEXT.md` — each clone
-  upgrades in its own session, per the established pattern; they're still behind (all at v1.0.1 per `CLONES.md`) and now
-  owe both v1.1.0 and this v1.1.1 `security:` release.
+### State then: decisions pass applied (D-51..D-56) and Phase 3 built on branch `kickoff` (PR #1, never merged). Stopped at the Phase 3 gate; `docs/CLOSEOUT.md` is the draft closeout (the PRD has no Phase 4).
 
-**Older checkpoint (superseded above):** FR-09..11 done and pushed 2026-09-28 (`d422d1a`, tagged **`v1.1.0`**, model: Sonnet). 5 new tests (144 total
-pass), each confirmed red against the prior behavior before its fix (patched-to-old-code, ran, restored). Typecheck and lint clean.
-- **FR-09**: `FOUNDATION_PATCHES.md` entries now carry a hash of the excused diff (`` `path` `hash` — reason ``); `foundation:drift`
-  fails again once that path's diff moves on, instead of excusing it forever. Error message prints the hash to paste in.
-- **FR-10**: Billing nav link in `layout.tsx` marked `{/* billing */}` (JSX — a trailing `//` renders as literal text) and added to
-  `MARKED_FILES`. Verified end-to-end: ran `foundation:check-modules` for real, confirmed `/o/[org]/settings/billing` is gone from
-  the build output and drift stays clean.
-- **FR-11**: `new-project` now refuses a port already `in use`/`reserved` in `~/.claude/CLAUDE.md`'s port table (best-effort, skips
-  if the file is unreadable), and refuses a second run once `package.json`'s name is no longer `saas-foundation`.
-- **Not done, on purpose**: clone upgrade notes for v1.1.0 — FR-09..11 is tooling, not a `security:` release, so no 7-day clock;
-  each clone (tradepost, pulseboard, callboard) picks up v1.1.0 whenever it next upgrades, in its own session.
-- **Also not done**: the 8 LOWs from `audit/FOUNDATION-REVIEW-2026-09-26.md` — queued, not urgent, "as time allows."
+Unattended cloud session, 2026-10-26 (PHASE3-BRIEF, model `claude-opus-5-5`; commit attribution changed to Opus 5.5 as the brief says). **No fixture regeneration**: none of the owner's Coursework decisions (kit items 12–17) changes a rule, a golden case or a fixture; `fixtures/` and the brief §9 hashes are untouched.
 
-**Decided 2026-09-26 (Shane): queue all of it for a fresh session; nothing was changed in code.** Findings, confirmed in source:
-`audit/FOUNDATION-REVIEW-2026-09-26.md` (no HIGH, 11 MED, 8 LOW). Order:
-1. ~~**FR-01 first**~~ **Done 2026-09-27, tagged `v1.0.2`** (lease claim, send outside tx, 15s fetch timeout; 3 new tests, 3 mutations red, 125 pass). Was: outbox sends inside a 5s interactive tx; a slow provider → delivered, not recorded, re-sent every cron run
-   and blocks the queue. Callboard's cron is `*/5`, so this is the live risk. Worth its own patch tag (v1.0.2) if the rest runs long.
-2. ~~FR-02..05~~ **Done 2026-09-27, tagged `v1.0.3`** (`8e4dd35`; 18 mutations red, 133 pass + 10/10 e2e, check-modules green). Clone notes added to each clone's NEXT.md (uncommitted there, beside the v1.0.2 note).
-   Choices: pending-MFA TTL 10 min; wrong-code cap 20/user/UTC day; invite caps 50/sender, 100/org, 5/recipient per day; the cancel hook lives in clone-owned `src/app/org-hooks.ts` (core may not import modules); concurrent pending checkouts still make two subs (ponytail note, logged).
-3. ~~FR-06/07/08~~ **Done 2026-09-28, untagged (CHANGELOG *Unreleased (1.1.0)*)**: `unguardedEntrypoints()` + `// public: <reason>` markers (14 files), glob all of `src/` + inline `'use server'` refused, id-like untagged fields throw (`notRef()` opt-out). 7 mutations red, 139 pass. Tag v1.1.0 after FR-09..11, then add each clone's upgrade note (their NEXT already says v1.1.0 follows).
-4. ~~FR-09/10/11 tooling~~ **Done 2026-09-28, tagged `v1.1.0`** (`d422d1a`). See the checkpoint note above.
-5. ~~LOWs (K1, K2, K5, K6, K13 writes)~~ **6 of 8 done 2026-09-28, tagged `v1.1.1`** (`a121708`). See the checkpoint note above.
-   Remaining 2 are deliberately deferred/no-action, not open work (K13 audit-role separation needs new infra; drift/.env.example
-   item is accepted behavior) — the LOW queue item is closed.
-Clones: tradepost (4200), pulseboard (4500), callboard (4600) — each upgrades in its own session. All three still owe v1.1.0
-*and* v1.1.1 (`security:`, due 2026-10-05) — neither has an upgrade note yet.
+### Decisions applied
 
-**Also done 2026-09-26:** clinic D-32 (group leader writes notes for own group only, `f35252c`) and rental SEC-16 / D-266
-(unrouted inbox portfolio-wide only, `58a0b5b`); CI green in both. Both repos had another session active at the time.
+D-51 learner link (explicit, audited, one per user per org) · D-52 stored `CatalogDraft` per editor · D-53 roles (publish = `org.update`, scores = `results.write`, item completion = the linked learner) · D-54 billing removed by the manifest + `DROP TABLE` migration (supersedes D-34/D-44) · D-55 D-46 confirmed · D-56 `OrgArchive` (insert-only), archived-write guard in all 18 writers + trigger on 13 tables, delete-org refused by the clone hook (closes the D-45 seam). Session defaults D-57 (the one instant→day module, `America/Chicago`), D-58 (`/orgs` hides archived; `/onboarding` seam), D-59 (axe-core from node_modules via one helper), D-60 (current version = newest), D-61 (e2e org per run + a 2099 cohort), D-62 (archive needs a fresh non-demo sign-in), D-63 (not-yours = notFound), D-64 (3.9 outbox dropped).
 
-**Decided 2026-09-23: urgent live-security fixes run before foundation M0.** Each one is its own session, run in
-**that project's folder** (one session per project). The details for each are in that repo's *Security findings*
-section and in `audit/<repo>.md` here.
+### Re-proved before any Phase 3 code (locally, then CI run 40345313191 green)
 
-**Session pick 2026-09-25: item 5 (storage SEC-01/02) runs on Opus, in the storage business folder, not here. Foundation has nothing open; safe to /clear.**
+`course:eval` 7/7 files 0 diffs (15 + 10,800 + 300 + 2,051 + 341 + 3 + 106 rows); `progress:verify` 341 + 300, 0 diffs; `fixtures:check` OK; `npm test` 294 / 46 files; `seed:fixtures` 40/7/2/3/300/24/1,352/16/341/2,051 (1,885 + 166)/35/806 in 21 s; `progress:verify --db` 0 diffs.
 
-**2026-09-26: Opus K4 pass done** (`audit/K4-SWEEP-2026-09-26.md`, scorecard v7). Rental K4 ✗ (3 HIGH, confirmed in source), clinic K4 ✗ (1 HIGH),
-alongside ✔, reservations N/A. Rental's Re-check processed: 10/14, not the 14/14 its own NEXT claims (K1, K6, K11 still ✗).
-Storage's Re-check stays queued in the artifact db until its SEC-01/02 edits are committed (they were uncommitted in flight at the time).
-Carried notes moved to `BACKLOG.md` (F-01, F-02). Items 9–10 were fixed the same day (scorecard v8: rental 11/14, clinic 10/14).
+### Phase 3 (docs/phase-3-tasks.md: 3.0–3.8 done, 3.9 dropped)
 
-## Queue (in order)
+- Pages: `/o/[org]` home, `catalog` (editor with live in-browser G1–G5), `catalog/versions`, `learners`, `learners/[code]`, `me`, `cohorts`, `cohorts/[code]/grades`, `cohorts/[code]/drip`, `archive`; `/orgs`. Nine server actions through `orgAction`.
+- Local gate at the head: `lint` 0 problems, `typecheck`, `engine:lint` (13 engine / 82 clone files), `foundation:drift` clean (modules removed: billing), `npm test` **299 tests / 47 files**, e2e **16 passed of 16 listed** (7 new), axe 0 violations in light and dark.
+- Acceptance numbers on the fixture school: E-01 `ACC-101 -> ACC-201 -> ACC-101`, Publish disabled; E-04 → 17 grandfathered; L-0001 `WRT-201, WRT-301`, 50.00%; L-0076 69.60 D fail `DROPPED:HW:HW1`, exact `6960/1`; L-0003 4 of 9 → 5 of 9 after completing A01.
 
-1. ~~**clinic: SEC-01 HIGH.**~~ **Live** (verified 2026-09-23): env vars set, pushed (`5f24c71`, in sync with origin),
-   `curl -I https://clinic.labintelligence.co/` returns 401 with a Basic challenge, and the cron route returns 401 with no challenge. gitleaks is clean (196 commits),
-   so `clearpath` was **made public** on 2026-09-23. **Done.**
-2. ~~**event toolkit: SEC-01 HIGH.**~~ Fixed (`2de11b8`); SEC-02 fixed too. **The repo is still blocked from going public:**
-   gitleaks flags a literal Vercel bearer token in `.claude/settings.json` (plus the ` 3`/` 4` copies), commit `b8310aa` (2026-08-14).
-   Shane: revoke that Vercel token. The files are no longer tracked, but they are not gitignored either, so add `.claude/settings*.json` to `.gitignore`. The token stays in history, so revoking it is the real fix.
-   SEC-03/04 (MED) are in progress in that folder (uncommitted edits).
-3. ~~**claude-dashboard: SEC-01 HIGH.**~~ Fixed (`a009fce`, pushed). The server binds to 127.0.0.1 and a LAN connection is refused. SEC-02 and OPS-01 are covered by the same fix. **Done.**
-4. ~~talk4me~~: **deferred to the end of the queue** (Shane, 2026-09-23). See item 8.
-5. **storage business: SEC-01, SEC-02** (webhook re-apply; cross-facility echo). Model: Opus (money). The repo was made private on 2026-09-23 because of these findings; make it public again once both are fixed.
-6. ~~design bridge~~: dead project (the API it needed cost too much), 2026-09-23. The repo stays private. SEC items dropped.
-7. ~~**Foundation M0**~~ **Done** 2026-09-23 (Shane chose to run it before storage). The repo `shanelabountyai/saas-foundation` is **private**.
-   The scaffold is pushed, and spikes S1–S3 all passed (the results are in spec §0). CI is lint + typecheck. Port 4100 is claimed in `~/.claude/CLAUDE.md`.
-   **M1 core platform: done** 2026-09-23 (env/clock/log/db + guard, headers, health, error pages, vitest, prod-build e2e, CI; INV-14, 15 (public + api), 18, 20 green).
-   **M2 Auth: done** 2026-09-23 in one session (est. 2). INV-05/07/09 (scoped to M2), 13, 15 (signed-in), 17, 23, 24, 25, 26 (TOTP) are green,
-   and each was mutation-checked red. The first migrations exist: core, billing and notifications, each separate (D-14d). Build choices are in spec **D-14**.
-   **M3 Tenancy + authz: done** 2026-09-23 in one session (est. 2). INV-01/02/03/04/22 run through the glob harness
-   (`tests/invariants/harness.ts`; six negative controls, and mutation-checked red on real code), plus INV-05 (membership removal),
-   06, 07 (invite), 09 (invite accepts), 19, 21 (including concurrent demotion), 26 (deletion) and 28, all green. D-13 confirmed; build choices are in spec **D-15**.
-   **M4 Share links: done** 2026-09-23. `Project` is the example resource, with `core/share/{links,project}.ts`, `/s/[token]` and `/o/[org]/projects`.
-   INV-07 (share link), 08, 09 (share reads) and 15 (share route) are green, each mutation-checked red (7 mutations). The e2e sweep passed 8/8. Build choices are in spec **D-16**.
-   **M5 Cron + secret hygiene: done** 2026-09-24. `core/cron.ts` (`isAuthorizedCron`: fails closed, `safeEqual`, header only), hourly `/api/cron`
-   (also sweeps `RateLimit` rows older than a day), `CRON_SECRET` in env + `.env.example`, `vercel.json` cron. INV-10/11/16 green, 5 mutations red. 84 unit/integration tests pass.
-   **M6 Billing: done** 2026-09-24. `modules/billing/{provider,webhook}.ts`, `/api/webhooks/stripe`, `/o/[org]/settings/billing` (+ nav link),
-   mock provider when no key. INV-12 green (13 tests, 8 mutations red, including the SB "any row = duplicate" bug and a dropped row lock).
-   98 unit/integration + 9/9 e2e. **Found and fixed a defect present since M1**: Prisma writes were stored 5–6h off in a non-UTC Postgres zone (D-17g).
-   Build choices are in spec **D-17**.
-   **M7 Notifications: done** 2026-09-24. `modules/notifications/{outbox,sms,templates}.ts`, drain + 7-day sweep in `/api/cron`, Twilio/SMS env keys.
-   11 new tests (109 total pass), 4 drain mutations red (no row lock, no backoff, no attempt cap, no sentAt filter). Build choices are in spec **D-18**.
-   **M8 Demo, clone tooling, release: done** 2026-09-25. `/demo` + `seed:demo` (INV-27, 3 mutations red), `new-project`, `db:setup`, `foundation:drift|status|check-modules`
-   (CI job `modules-removed`), README, legal stubs, CHANGELOG, CLONES. 122 tests + 10/10 e2e. **Tagged `v1.0.0`, then `v1.0.1`** (the acceptance run found the README's
-   `git checkout -b main` fails in a fresh clone; a pushed tag is not moved, so the fix is a patch release). Clone from **v1.0.1**. Acceptance run from a clean clone:
-   install to a working `/demo` sign-in took about 10s warm-cache (limit 30 min; not measured cold). Build choices in spec **D-19**.
-   **M9 scorecard: done** 2026-09-25, artifact https://claude.ai/artifact/TognMvisj8T9GNQGtE9MbJ. Foundation row all ✔ (122 tests). All rows re-scored 2026-09-25 by Sonnet agents (audit/rescore/*.json; design bridge stays baseline). K3/K4 spot-checks flagged; the Opus K3/K4 pass has not run. Per-project Re-check buttons queue requests in the artifact db (docs checks/<project-id>); process them by reading with ArtifactData, re-running that project's scorer, then writing doneAt + summary back.
-   **Clinic K11/OPS-04 cleanup landed 2026-09-25** (`clinic` a2e07eb: zod env schema, OPS-04 was already satisfied). Clinic is now 10/14. `audit/scorecard.json` and `build-scorecard.py` are updated and committed, but the artifact was republished (v5) with clinic at 10/14. **Next: storage (item 5)**, then talk4me. Earlier: storage (item 5) and talk4me (item 8).
-   - Not built, on purpose: `scripts/seed.ts`, `scripts/drain-outbox.ts` (nothing needs them).
-   - Shane, optional: to try real Stripe test mode, set `STRIPE_SECRET_KEY` (sk_test_), `STRIPE_PRICE_ID`, `STRIPE_WEBHOOK_SECRET` in `.env.local`
-     and forward with `stripe listen --forward-to localhost:4100/api/webhooks/stripe`. Not needed for M7.
-   - Carried notes: an audit-log viewer (`audit.read`) and `/o/[org]/settings/security` are not built. Neither is in any milestone yet, so add them to `BACKLOG.md` if wanted.
-   - The harness takes ~2.5s on an idle machine and ~80s under a sibling project's sweep (load 45). That is CPU contention, not a hang.
-8. **talk4me: SEC-01 HIGH** (deferred here from item 4 on 2026-09-23). Cap `api/tts.ts` at about 500 chars, allowlist voice ids,
-   add a Vercel Firewall rule. Model: Sonnet. After it is fixed, make the `talk4me` repo public.
-9. ~~**rental business: K4-R1/R2/R3 HIGH**~~ **Fixed 2026-09-26** (`6d75d45`, SEC-09–15, CI green). Open in that repo: SEC-16 (unrouted inbox, a design
-   question for Shane), the K4 LOWs, and K1/K6/K11 (tenant sign-out not server-side, same-origin referrer + no no-store on token pages, env schema covers 6 vars).
-10. ~~**clinic: K4-C1 HIGH**~~ **Fixed 2026-09-26** (`8c060a5`, SEC-07–11). Also fixed: clinic CI had been red at `npm ci` since SEC-06 (`b72b1f3`, 09-23) —
-   `a4d11ba` — which hid a date-rotted e2e spec, fixed in `62d7f1c`; CI green. Open in that repo: whether a group leader may write notes for attendees
-   they don't treat (Shane), and two LOWs (forms for any client; not-found vs forbidden oracle).
+### CI runs this session
 
-**Shane-only, no code (still to do):**
-- Revoke the Vercel token leaked in event-toolkit history (`b8310aa`, `.claude/settings.json`). This blocks making the repo public.
-- ElevenLabs spend cap (talk4me).
-- Rotate or remove the live Anthropic key and Neon credentials in `use-case-support-ticket-deflection/.env.local`.
+| Run | Head | Result | What |
+|---|---|---|---|
+| https://github.com/shanelabountyai/coursework/actions/runs/40344199829 | 9337fba | green | decisions doc + billing removal |
+| https://github.com/shanelabountyai/coursework/actions/runs/40345313191 | 532bc69 | green | archive, learner link, drafts, today; Phase 1/2 proofs re-run in CI |
+| https://github.com/shanelabountyai/coursework/actions/runs/40351666361 | aefd586 | green | Phase 3: pages, actions, e2e with axe (no red runs this session) |
+| https://github.com/shanelabountyai/coursework/actions/runs/40352540079 | 5006bb7 | green | Phase 3 gate docs — the head |
 
-## Where things are
-- Spec (APPROVED v2): `FOUNDATION_SPEC.md`. Plan (APPROVED, M0–M9): `IMPLEMENTATION_PLAN.md`. Both were revised on 2026-09-23 after a Codex review (D-10 to D-12, INV-28, tighter S1–S3), and the revision is approved.
-- Portfolio audit baseline for the M9 scorecard: `audit/` (17 reports on the K1–K14 checklist).
-- SEC items were appended (uncommitted, for each repo's own session to commit) to:
-  - storage, Bookable and rental: `docs/prds/06-backlog.md`
-  - Countertop and reservations: `docs/backlog.md`
-  - clinic, groundwork and talk4me: `NEXT.md`
-  - alongside: `BACKLOG.md`
-  - showcall: `docs/backlog.md`
-  - event toolkit, design bridge, claude-dashboard and the three use-case repos: `SECURITY_BACKLOG.md`
-  - Use-Case Studio: its backlog file
+### What the sandbox could and could not run
+
+- **Could:** everything except Prisma's schema engine — client generated with `PRISMA_SCHEMA_ENGINE_BINARY=/bin/true npx prisma generate` (D-47), migrations applied with `psql -f` in order, full `npm test`, `next build`, and **Playwright e2e** (Chromium 1243 is preinstalled at `/opt/pw-browsers`; the download is skipped by `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1`).
+- **Could not:** `prisma migrate deploy/diff/validate` (schema engine 403). CI's `migrate diff` is the only proof the two new hand-written migrations equal the schema — it was green.
+
+### What Shane needs to do
+
+See `docs/CLOSEOUT.md` "By hand": review D-51..D-64 and the Phase 3 status table; push the `v1.3.0` tag and un-pin drift (D-41); upstream an org-list hook for `/onboarding` (D-58); declare `axe-core` as a devDependency (D-59); confirm port 7400 and the CLONES.md row; PRD P0-3 sentence; O-9 if wanted.
+
+## Phase 2 handoff (2026-10-26), kept as written
+
+
+### State then: Phase 2 complete on branch `kickoff` (PR #1, never merged). Stopped at the Phase 2 gate for review.
+
+Unattended cloud build session, 2026-10-26 ("Go phase 2"), model `claude-fable-5-1`, after the Phase 1 session of 2026-10-25/26 (its handoff is kept below). Everything is on `origin/kickoff`; PR #1 (`kickoff` → `main`, https://github.com/shanelabountyai/coursework/pull/1) is the CI trigger and stays open. **Phase 3 is not started**: `docs/phase-3-tasks.md` is a draft for review. **Port 7400 still unverified** (D-33).
+
+### Phase 2 numbers (D-31: oracle agreement on the generator's own data, through the database this time)
+
+- `seed:fixtures` (through the write paths, every row through an engine): catalog `cat-v1` hash `32978f4b…`, 40 courses / 7 certificates / 2 equivalencies, 3 schemes (2 ACCEPT, `SCH-BAD` stored DRAFT), 300 learners, 24 waivers, 1,352 completion events (1,164 PASS), 16 cohorts, 341 enrollments, 2,051 item events → **1,885 `ItemCompletion` rows + 166 `item.refused` audit rows** (154 NOT_RELEASED, 12 NOT_ENROLLED), 35 assignments, 806 submissions; 2,629 audit rows across 11 actions, none without an actor; 22 s locally.
+- From the database rows, 0 diffs against the oracle: eligibility **10,800** rows, certificate progress + paths **300**, enrollment progress **341**, grades **106** (`tests/course/fixtures-db.test.ts`; `progress:verify --db` 0 diffs, also a CI step).
+- E-01..E-15 through the live book: 15 attempts, 4 versions, verdicts and cycle paths equal `expected_edits.csv`; E-04 flags 17 enrollments and E-11 6, all still `IN_PROGRESS` (V3).
+- Tamper: UPDATE and DELETE refused on all 5 append-only tables (Prisma and raw SQL); a planted `Enrollment.progressBp` column fails the schema test; one `ItemCompletion` deleted with the trigger disabled is exactly one diff (4 → 3 of 9, 4444 → 3333).
+- Local gate: `lint` (1 template warning), `typecheck`, `engine:lint` clean (13 engine files, 55 clone files), `foundation:drift` clean, `npm test` **295 tests / 45 files** (Phase 1: 268 / 40), `course:eval` and `progress:verify` unchanged (0 diffs).
+
+### What Shane needs to do
+
+1. **Review** `docs/phase-2-tasks.md` (status table at the bottom: where the build departed from the draft) and decisions **D-42..D-50**; then `docs/phase-3-tasks.md` (draft; three open questions at the bottom). Reply go / changes.
+2. **D-45 seam**: an org with catalog history cannot be deleted through `deleteOrg` (Restrict FKs into append-only tables). Decide for Phase 3: archive, or allow the delete inside `deleteOrg` only.
+3. **D-46**: a refused item completion is an audit row and no table row (PRD P0-6 wording). If you want refused rows in `ItemCompletion` instead (the draft 2.5 wording), say so — the engine call is the same; only the write changes.
+4. Still open from Phase 1: push the `v1.3.0` tag and un-pin `foundation:drift` in CI (D-41); `CLONES.md` row; PRD P0-3 drip-order sentence; confirm port 7400.
+
+### CI runs this session (the gate)
+
+| Run | Head | Result | Why |
+|---|---|---|---|
+| https://github.com/shanelabountyai/coursework/actions/runs/40319180795 | 527f082 | **red** at `migrate diff` | the step used Prisma 6 flags (`--from-url`), which Prisma 7 removed; logs are unreadable from the cloud, so the next two pushes made the step print its output into an error annotation (readable through the API) |
+| https://github.com/shanelabountyai/coursework/actions/runs/40320245350 | 1d87c91 | **red** at `migrate diff` | same cause; the PR-comment diagnostic did not post (token) |
+| https://github.com/shanelabountyai/coursework/actions/runs/40320706824 | 03cb04a | **red** at `migrate diff` | same cause, now with the message in the annotation: `--from-url was removed` |
+| https://github.com/shanelabountyai/coursework/actions/runs/40321125370 | e66d14d | **green** | flags fixed (`--from-config-datasource --to-schema prisma/schema`); the whole Phase 2 tree: migrate diff empty (hand-written SQL = schema), 295 vitest tests, Playwright |
+| https://github.com/shanelabountyai/coursework/actions/runs/40321531319 | 5bcc251 | **green** | 2.11 CI seed (`ci-fixtures`) + `progress:verify --db` steps, docs, Phase 3 draft — the Phase 2 head |
+
+### What the sandbox could and could not run (D-47)
+
+- **Could, this time:** `PRISMA_SCHEMA_ENGINE_BINARY=/bin/true npx prisma generate` generates the client without the engine download, so `npm run typecheck` and the **full** `npm test` ran locally against a local Postgres 16 (started with `service postgresql start`; migrations applied in order with `psql -f` from a scratchpad script, since `prisma migrate deploy` needs the schema engine). `.env.test` / `.env.local` written locally (gitignored).
+- **Could not:** `prisma migrate deploy`, `migrate diff`, `migrate dev --create-only` (403 on `binaries.prisma.sh`, verbatim error in the Phase 1 section below). The migration SQL is hand-written; **CI's `migrate diff` is the only proof it equals the schema**. Playwright not attempted locally. CI job logs still unreadable (`Forbidden` on the blob URL); annotations are readable, so failing steps now put their output there.
+
+## Phase 1 handoff (2026-10-25/26), kept as written
+
+### Numbers (D-31: oracle agreement on the generator's own data, not a product claim)
+
+`npm run course:eval` → 7/7 `expected_*.csv` with **0 diffs**: edits 15, eligibility 10,800, progress 300, drip 2,051, enrollment progress 341, schemes 3, grades 106; `total diffs 0; max branch combinations 16`; the §8 report equals `fixtures/samples/reference_graph.output.txt` and `reference_grades.output.txt` line for line. `npm run progress:verify` → 341 + 300 values, 0 diffs. `npm run test:engine` → 96 tests (GG-01..GG-20, GS-01..GS-15, Rational, days, CSV, the eval diffs). `npm run engine:lint` → clean. `npm run fixtures:check` → `OK seed=20261025 catalog_hash=32978f4b…`. Full table: `docs/EVAL.md`.
+
+### What Shane needs to do
+
+1. **Review** `docs/phase-1-plan.md` (8 contradictions, defaults D-32..D-41) and `docs/phase-2-tasks.md` (draft; three open questions at the bottom). Reply go / changes.
+2. **Push the template tag** from the Mac: `git push origin v1.3.0` (the clone repo has no tags; the cloud could not push one — D-41). Then change the CI step back to plain `npm run foundation:drift` (it is pinned `--base e8c0f74…` in `.github/workflows/ci.yml`).
+3. **CLONES.md row** on `saas-foundation` (KICKOFF step 3) — not opened from the cloud (no instruction to push to the template remote; KICKOFF lists it under "still to do by hand").
+4. **PRD P0-3** lists the drip codes "in that check order" as NOT_RELEASED, NOT_ENROLLED, UNKNOWN_ITEM; brief R3 / D-20 / the oracle check enrollment → item → release and the engine follows them. Correct the PRD sentence (plan contradiction 5).
+5. Confirm port 7400 and add the port-table row (D-5, D-33).
+
+### CI runs (the gate)
+
+| Run | Head | Result | Why |
+|---|---|---|---|
+| https://github.com/shanelabountyai/coursework/actions/runs/40238858812 | bc83c1a (kit) | green | before this session |
+| https://github.com/shanelabountyai/coursework/actions/runs/40259270242 | 135b1f0 | **red** | `foundation:drift`: shallow checkout had no `v1.3.0` tag |
+| https://github.com/shanelabountyai/coursework/actions/runs/40259527052 | 54a6f7b | **red** | `foundation:drift`: `fetch-depth: 0` does not help — the clone repo has no tags at all (D-41) |
+| https://github.com/shanelabountyai/coursework/actions/runs/40260733897 | 601746c | green | drift pinned to the v1.3.0 commit; engines through 1.8 |
+| https://github.com/shanelabountyai/coursework/actions/runs/40261205255 | 6ced3ab | green | `course:eval` and `progress:verify` wired (0 diffs in CI) |
+| https://github.com/shanelabountyai/coursework/actions/runs/40261465771 | 0a6503b | **red, but for the wrong reason** | first 1.12 attempt: the flip was right but its comment held `1.12`, which `engine:lint`'s decimal-literal grep under `src/grades/` caught before `course:eval` ran. The lint reads comments too — by design, it is a grep. Redone below |
+| https://github.com/shanelabountyai/coursework/actions/runs/40261661360 | 4965a52 | green | revert of the first flip + Phase 1 gate docs |
+| https://github.com/shanelabountyai/coursework/actions/runs/40261702476 | cf25905 | **red on purpose at `course:eval`** | task 1.12 proof: S5 tie order flipped (lint-clean comment), GS-03 9233 → 9250, 15 grade rows diverge; `engine:lint` passed, `course:eval` failed |
+| https://github.com/shanelabountyai/coursework/actions/runs/40261927041 | 93c3bbe | green | revert of cf25905 + run links; the Phase 1 head |
+
+### What the sandbox could not run (D-4: CI is the gate)
+
+- `npm ci` fails at `postinstall` (`prisma generate`), verbatim:
+  ```
+  Error: Failed to fetch sha256 checksum at https://binaries.prisma.sh/all_commits/0edf323efd1d98336f3f0a68684b56f689b900d3/debian-openssl-3.0.x/schema-engine.sha256 - 403 Forbidden
+  ```
+  and with `PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1`:
+  ```
+  Error: Failed to fetch the engine file at https://binaries.prisma.sh/all_commits/0edf323efd1d98336f3f0a68684b56f689b900d3/debian-openssl-3.0.x/schema-engine.gz - 403 Forbidden
+  ```
+  Worked around locally with `npm ci --ignore-scripts`. Consequences: `src/generated/prisma` does not exist here, so `npm run typecheck` reports `Cannot find module '@/generated/prisma/enums'` in the template's tests (not a Coursework defect), and `npm test` (database half) cannot run. Local Postgres 16 is installed but down and the migrations need the Prisma schema engine. Not patched; CI runs all of it and is green.
+- Playwright browsers: not attempted locally (e2e is the template's, unchanged).
+- `git push origin v1.3.0` and the REST `git/refs` write are refused by the session's proxy (D-41).
+- CI logs cannot be downloaded through the proxy (`Forbidden` on the blob URL); failures were diagnosed by reproducing in a fresh clone.
+- What does run locally: `npm run lint`, `npm run foundation:drift` (clean against v1.3.0), `npm run engine:lint`, `npm run fixtures:check`, `npm run test:engine`, `course:eval`, `progress:verify`, `catalog:check`, and `tsc --noEmit` filtered to Coursework files (clean).
+
+### Task log (Phase 1, all done)
+
+- **1.1 Scaffold** — commands exist; scope banner verbatim in README; model pin present; `?connection_limit=10&pool_timeout=20` on CI's URLs and written by `scripts/db-setup.ts`; `vercel.json` has the house `ignoreCommand`; D-8 lint ported from Bookable (D-35); billing and share links left unwired (D-34); reuse scan skipped (D-32); CI gained `foundation:drift`, `engine:lint`, `course:eval`, `progress:verify`, `fixtures:check` under job-level `TZ=America/Chicago` (D-39).
+- **1.2 Fixtures committed** — from the kit; `fixtures:check` OK; CI runs it after `course:eval` so a write into `fixtures/` fails the tree check.
+- **1.3 Port, with lineage** — Bookable lint ported (D-35); canonical JSON + SHA-256 written fresh, Adjuster unreachable (D-36); `catalogHash(cat-v1)` = `32978f4b…`.
+- **1.4 Days** — `src/graph/days.ts`; GG-20 dates; 47,847-day round trip; planted `new Date("…")` fails both `eslint` and `engine:lint` (checked, then removed).
+- **1.5 Expressions and graph** — `expr.ts`, `dag.ts`, `publish.ts`; GG-01..GG-09; 15/15 edits; `catalog:check` CLI.
+- **1.6 Eligibility** — `eligibility.ts`; GG-10..GG-15; 10,800/10,800 rows.
+- **1.7 Path and grandfather** — `path.ts`, `retro.ts`; GG-16..GG-19; 300/300 paths; grandfathered 17/6/0/0.
+- **1.8 Rational and gradebook** — `rational.ts`, `scheme.ts`, `grade.ts`; GS-01..GS-15; 106/106 grades with `exact` and `categories`.
+- **1.9 Drip and `course:eval`** — `drip.ts`; `scripts/course-eval.ts` + `scripts/lib/{csv,fixtures,eval}.ts`; both reference outputs line for line; exit 1 on a planted row.
+- **1.10 `progress:verify`** — 341 + 300 from events; `--drop-event IE-00001` moves exactly one row.
+- **1.11 `docs/EVAL.md`** — every number next to its command.
+- **1.12 CI gate** — red run 40261702476 (deliberate, fails at `course:eval`), green run 40261661360 before it and the revert push after it; the first attempt 40261465771 was red at `engine:lint` instead (comment held a decimal), so it was redone.
+- **Pre-Phase-2 check** — `catalog:check` with `MGT-301 → any(MGT-201, MGT-202, MGT-401)` prints `REJECT:CYCLE` `MGT-301 -> MGT-401 -> MGT-301` and nothing else; `fixtures/` unchanged. `docs/phase-2-tasks.md` drafted.
+
+### Decided this session
+
+D-32 reuse scan skipped · D-33 port unverified · D-34 billing/share links unwired · D-35 lint scope and lineage · D-36 canonical JSON written fresh · D-37 `Rational` shape · D-38 `tests/engine/` + `test:engine` · D-39 CI `TZ` · D-40 zero states · D-41 drift pinned to the v1.3.0 commit. Also: drip built before the gradebook; the CSV reader is owned here (`scripts/lib/csv.ts`); no dependency added.
+
+### Left open
+
+O-1..O-9 defaults in force (none touched). Phase 2 questions at the bottom of `docs/phase-2-tasks.md`: `Learner` vs foundation `User`; remove billing by the manifest or keep unwired; `CatalogVersion.content` JSONB vs normalised `Course` rows.
+
+### Kickoff measurements (oracle on the frozen fixtures)
+
+catalog `cat-v1` 40 courses / 56 edges / 0 cycles, hash `32978f4b…`; 15 draft edits → 4 accept, 11 reject (6 cycles); eligibility 10,800 rows (COMPLETED 1,140 / ELIGIBLE 2,613 / BLOCKED 7,047); 300 paths, lengths 0–9, max 16 branch combinations; drip 2,051 events (1,885 accept / 154 not released / 12 not enrolled); 106 grades (67 pass / 39 fail), 0 within 0.5 hp of the threshold.
+
+### History
+
+**2026-10-25 (kickoff kit):** PRD v1.0, decisions D-1..D-31 + O-1..O-9, domain brief with rules G1–G9 / R1–R3 / P1–P2 / V1–V3 / S1–S9, golden cases GG-01..GG-20 and GS-01..GS-15, kickoff measurements, portfolio overlap, Phase 1 tasks, CLAUDE.md, KICKOFF.md, `.claude/settings.json` (Fable pin). Tools in `tools/` (Python 3, stdlib). Fixtures generated twice in separate directories with identical sha256 values (brief §9).

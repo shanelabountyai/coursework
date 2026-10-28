@@ -1,0 +1,238 @@
+{
+  "base_version": "cat-v1",
+  "edits": [
+    {
+      "id": "E-01",
+      "note": "2-cycle: ACC-101 would require ACC-201",
+      "ops": [
+        {
+          "op": "set_prereq",
+          "course": "ACC-101",
+          "prereq": "ACC-201"
+        }
+      ]
+    },
+    {
+      "id": "E-02",
+      "note": "3-cycle through an ANY branch: MGT-101 -> MGT-201 -> MGT-301 -> MGT-101",
+      "ops": [
+        {
+          "op": "set_prereq",
+          "course": "MGT-101",
+          "prereq": {
+            "any": [
+              "MGT-301",
+              "WRT-101"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "E-03",
+      "note": "self-reference",
+      "ops": [
+        {
+          "op": "set_prereq",
+          "course": "SEC-202",
+          "prereq": "SEC-202"
+        }
+      ]
+    },
+    {
+      "id": "E-04",
+      "note": "WRT-202 tightened from ANY to ALL; retroactively blocks in-progress learners (report only)",
+      "ops": [
+        {
+          "op": "set_prereq",
+          "course": "WRT-202",
+          "prereq": {
+            "all": [
+              "WRT-101",
+              "DAT-101"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "E-05",
+      "note": "published course requiring a DRAFT course",
+      "ops": [
+        {
+          "op": "set_prereq",
+          "course": "DAT-401",
+          "prereq": {
+            "all": [
+              "DAT-202",
+              "DAT-302",
+              "DAT-303"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "E-06",
+      "note": "OR branch that is itself a cycle: ACC-301 any(ACC-201, ACC-401) while ACC-401 requires ACC-301",
+      "ops": [
+        {
+          "op": "set_prereq",
+          "course": "ACC-301",
+          "prereq": {
+            "any": [
+              "ACC-201",
+              "ACC-401"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "E-07",
+      "note": "publish DAT-303 (valid)",
+      "ops": [
+        {
+          "op": "set_status",
+          "course": "DAT-303",
+          "status": "PUBLISHED"
+        }
+      ]
+    },
+    {
+      "id": "E-08",
+      "note": "unknown course code in a prerequisite",
+      "ops": [
+        {
+          "op": "set_prereq",
+          "course": "PRJ-301",
+          "prereq": {
+            "any": [
+              "PRJ-201",
+              "PRJ-202",
+              "MGT-201",
+              "PRJ-999"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "E-09",
+      "note": "nesting depth 3",
+      "ops": [
+        {
+          "op": "set_prereq",
+          "course": "SEC-301",
+          "prereq": {
+            "all": [
+              "SEC-201",
+              {
+                "any": [
+                  "SEC-202",
+                  {
+                    "all": [
+                      "SEC-101",
+                      "SEC-201"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "E-10",
+      "note": "empty ANY group",
+      "ops": [
+        {
+          "op": "set_prereq",
+          "course": "MGT-202",
+          "prereq": {
+            "all": [
+              "MGT-101",
+              {
+                "any": []
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "E-11",
+      "note": "ACC-202 gains ACC-102 (valid; grandfather report for in-progress learners)",
+      "ops": [
+        {
+          "op": "set_prereq",
+          "course": "ACC-202",
+          "prereq": {
+            "all": [
+              "ACC-101",
+              "ACC-102"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "E-12",
+      "note": "retire WRT-101 while published WRT-201 requires it",
+      "ops": [
+        {
+          "op": "set_status",
+          "course": "WRT-101",
+          "status": "RETIRED"
+        }
+      ]
+    },
+    {
+      "id": "E-13",
+      "note": "diamond closed into a 2-cycle: DAT-201 any(..., DAT-202) while DAT-202 needs DAT-201",
+      "ops": [
+        {
+          "op": "set_prereq",
+          "course": "DAT-201",
+          "prereq": {
+            "any": [
+              "DAT-101",
+              "ACC-102",
+              "DAT-202"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "E-14",
+      "note": "two independent cycles in one edit",
+      "ops": [
+        {
+          "op": "set_prereq",
+          "course": "ACC-101",
+          "prereq": "ACC-202"
+        },
+        {
+          "op": "set_prereq",
+          "course": "WRT-101",
+          "prereq": "WRT-201"
+        }
+      ]
+    },
+    {
+      "id": "E-15",
+      "note": "add ACC-203 Accounts Receivable requiring ACC-101 (valid)",
+      "ops": [
+        {
+          "op": "add_course",
+          "course": "ACC-203",
+          "title": "Accounts Receivable",
+          "status": "PUBLISHED",
+          "prereq": "ACC-101"
+        }
+      ]
+    }
+  ]
+}

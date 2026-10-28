@@ -1,0 +1,35 @@
+{
+  "catalog_hash": "32978f4b386ea7ce1fdf1018f67633def259d08808c501cdedea84c849197e8d",
+  "catalog_version": "cat-v1",
+  "counts": {
+    "assignments": 35,
+    "certificates": 7,
+    "cohorts": 16,
+    "completions": 1352,
+    "completions_pass": 1164,
+    "courses": 40,
+    "draft": 2,
+    "draft_edits": 15,
+    "enrollments": 341,
+    "item_completions": 2051,
+    "learners": 300,
+    "published": 36,
+    "retired": 2,
+    "schemes": 3,
+    "submissions": 806,
+    "waivers": 24
+  },
+  "seed": 20261025,
+  "sha256": {
+    "assignments.csv": "7e4067302a42846b24e2037035985059b1c00402dd8b31e81853fc5881eeec52",
+    "catalog.json": "7b303d78b18c1b5183abcd5dff5713212af7c258759ff6d4c9ba0acaba9cc14e",
+    "cohorts.json": "0eaaeb1ffeb71bdb070d9d586a78a066dcd35b87099024a229a650a1dae1d033",
+    "completions.csv": "1e09e92008fed3ab5a0914f7e8c0a73ede76b32c0a7217c6cdb4c5ee52aecc9b",
+    "draft_edits.json": "6efa412364946c8218f321ed18685885cd9fda1f41d643a3d7d0c7e4d0d5dff8",
+    "item_completions.csv": "61fe403e968edc9624a9eacfde792474996fc629e45ae291a867302419910198",
+    "learners.csv": "6816e2033b7bbdc7710db06ea0679828633b5dddf953d0eb9ca8b83f15be6e9a",
+    "schemes.json": "631fad50861f10c9709b493dd5ffd55b9285d5e2c8cd92c38aed083d6abc8328",
+    "submissions.csv": "ac1f4b053b91282672f4da838e71881c71258ff71df1a5863965ed58702024d2",
+    "waivers.csv": "4a7212b2618604482481675015801d6d702962dc5aed8da905fc83b4672df282"
+  }
+}

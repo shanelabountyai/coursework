@@ -28,6 +28,8 @@ model User {
   sessions         Session[]
   loginTokens      LoginToken[]
   recoveryCodes    RecoveryCode[]
+  learners         Learner[] // app
+  catalogDrafts    CatalogDraft[] // app
 }
 
 /// Magic-link token. Only sha256 stored; single use; 15 min.
@@ -84,8 +86,19 @@ model Org {
   shareLinks     ShareLink[]
   projects       Project[]
   // module back-relations: each line ends in its module marker (spec §4)
-  billingAccount BillingAccount? // billing
   outbox         Outbox[] // notifications
+  catalogVersions  CatalogVersion[] // app
+  publishAttempts  PublishAttempt[] // app
+  learners         Learner[] // app
+  waivers          Waiver[] // app
+  completionEvents CompletionEvent[] // app
+  cohorts          Cohort[] // app
+  enrollments      Enrollment[] // app
+  itemCompletions  ItemCompletion[] // app
+  gradeSchemes     GradeScheme[] // app
+  submissions      Submission[] // app
+  archive          OrgArchive? // app
+  catalogDrafts    CatalogDraft[] // app
 }
 
 model Membership {

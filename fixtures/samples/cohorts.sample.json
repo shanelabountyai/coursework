@@ -1,0 +1,156 @@
+{
+  "cohorts": [
+    {
+      "id": "C-ACC101-F26",
+      "course": "ACC-101",
+      "start_day": "2026-08-31",
+      "scheme": "SCH-STD",
+      "catalog_version": "cat-v1",
+      "items": [
+        {
+          "code": "L01",
+          "title": "Welcome and syllabus",
+          "offset_days": 0
+        },
+        {
+          "code": "L02",
+          "title": "Module 1 lesson",
+          "offset_days": 0
+        },
+        {
+          "code": "A01",
+          "title": "Module 1 exercise",
+          "offset_days": 3
+        },
+        {
+          "code": "L03",
+          "title": "Module 2 lesson",
+          "offset_days": 7
+        },
+        {
+          "code": "A02",
+          "title": "Module 2 exercise",
+          "offset_days": 10
+        },
+        {
+          "code": "L04",
+          "title": "Module 3 lesson",
+          "offset_days": 14
+        },
+        {
+          "code": "A03",
+          "title": "Module 3 exercise",
+          "offset_days": 17
+        },
+        {
+          "code": "L05",
+          "title": "Module 4 lesson",
+          "offset_days": 21
+        },
+        {
+          "code": "A04",
+          "title": "Capstone brief",
+          "offset_days": 28
+        }
+      ],
+      "enrolled": [
+        {
+          "learner_id": "L-0003",
+          "status": "IN_PROGRESS"
+        },
+        {
+          "learner_id": "L-0052",
+          "status": "IN_PROGRESS"
+        },
+        {
+          "learner_id": "L-0071",
+          "status": "IN_PROGRESS"
+        },
+        {
+          "learner_id": "L-0076",
+          "status": "IN_PROGRESS"
+        },
+        {
+          "learner_id": "L-0086",
+          "status": "IN_PROGRESS"
+        }
+      ]
+    },
+    {
+      "id": "C-ACC102-F26",
+      "course": "ACC-102",
+      "start_day": "2026-09-07",
+      "scheme": null,
+      "catalog_version": "cat-v1",
+      "items": [
+        {
+          "code": "L01",
+          "title": "Welcome and syllabus",
+          "offset_days": 0
+        },
+        {
+          "code": "L02",
+          "title": "Module 1 lesson",
+          "offset_days": 0
+        },
+        {
+          "code": "A01",
+          "title": "Module 1 exercise",
+          "offset_days": 3
+        },
+        {
+          "code": "L03",
+          "title": "Module 2 lesson",
+          "offset_days": 7
+        },
+        {
+          "code": "A02",
+          "title": "Module 2 exercise",
+          "offset_days": 10
+        },
+        {
+          "code": "L04",
+          "title": "Module 3 lesson",
+          "offset_days": 14
+        },
+        {
+          "code": "A03",
+          "title": "Module 3 exercise",
+          "offset_days": 17
+        },
+        {
+          "code": "L05",
+          "title": "Module 4 lesson",
+          "offset_days": 21
+        },
+        {
+          "code": "A04",
+          "title": "Capstone brief",
+          "offset_days": 28
+        }
+      ],
+      "enrolled": [
+        {
+          "learner_id": "L-0001",
+          "status": "IN_PROGRESS"
+        },
+        {
+          "learner_id": "L-0016",
+          "status": "IN_PROGRESS"
+        },
+        {
+          "learner_id": "L-0031",
+          "status": "IN_PROGRESS"
+        },
+        {
+          "learner_id": "L-0049",
+          "status": "IN_PROGRESS"
+        },
+        {
+          "learner_id": "L-0072",
+          "status": "IN_PROGRESS"
+        }
+      ]
+    }
+  ]
+}

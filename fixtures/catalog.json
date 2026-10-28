@@ -1,0 +1,455 @@
+{
+  "version": "cat-v1",
+  "courses": [
+    {
+      "code": "ACC-100",
+      "title": "Intro to Numbers (legacy)",
+      "status": "RETIRED",
+      "prereq": null
+    },
+    {
+      "code": "ACC-101",
+      "title": "Bookkeeping Basics",
+      "status": "PUBLISHED",
+      "prereq": null
+    },
+    {
+      "code": "ACC-102",
+      "title": "Spreadsheets for Finance",
+      "status": "PUBLISHED",
+      "prereq": null
+    },
+    {
+      "code": "ACC-201",
+      "title": "Financial Statements",
+      "status": "PUBLISHED",
+      "prereq": {
+        "all": [
+          "ACC-101",
+          "ACC-102"
+        ]
+      }
+    },
+    {
+      "code": "ACC-202",
+      "title": "Payroll Fundamentals",
+      "status": "PUBLISHED",
+      "prereq": "ACC-101"
+    },
+    {
+      "code": "ACC-301",
+      "title": "Managerial Accounting",
+      "status": "PUBLISHED",
+      "prereq": "ACC-201"
+    },
+    {
+      "code": "ACC-302",
+      "title": "Audit Fundamentals",
+      "status": "PUBLISHED",
+      "prereq": {
+        "all": [
+          "ACC-201",
+          {
+            "any": [
+              "ACC-202",
+              "MGT-201"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "ACC-303",
+      "title": "Tax Basics",
+      "status": "DRAFT",
+      "prereq": "ACC-201"
+    },
+    {
+      "code": "ACC-401",
+      "title": "Controller Track",
+      "status": "PUBLISHED",
+      "prereq": {
+        "all": [
+          "ACC-301",
+          "ACC-302"
+        ]
+      }
+    },
+    {
+      "code": "DAT-101",
+      "title": "Data Literacy",
+      "status": "PUBLISHED",
+      "prereq": null
+    },
+    {
+      "code": "DAT-102",
+      "title": "SQL Basics",
+      "status": "PUBLISHED",
+      "prereq": null
+    },
+    {
+      "code": "DAT-201",
+      "title": "Data Cleaning",
+      "status": "PUBLISHED",
+      "prereq": {
+        "any": [
+          "DAT-101",
+          "ACC-102"
+        ]
+      }
+    },
+    {
+      "code": "DAT-202",
+      "title": "Dashboards",
+      "status": "PUBLISHED",
+      "prereq": {
+        "all": [
+          "DAT-102",
+          {
+            "any": [
+              "DAT-101",
+              "DAT-201"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "DAT-301",
+      "title": "Statistics for Analysts",
+      "status": "PUBLISHED",
+      "prereq": "DAT-201"
+    },
+    {
+      "code": "DAT-302",
+      "title": "Forecasting",
+      "status": "PUBLISHED",
+      "prereq": {
+        "all": [
+          "DAT-301",
+          {
+            "any": [
+              "ACC-201",
+              "MGT-202"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "DAT-303",
+      "title": "Machine Learning Intro",
+      "status": "DRAFT",
+      "prereq": "DAT-301"
+    },
+    {
+      "code": "DAT-401",
+      "title": "Analytics Capstone",
+      "status": "PUBLISHED",
+      "prereq": {
+        "all": [
+          "DAT-202",
+          "DAT-302"
+        ]
+      }
+    },
+    {
+      "code": "MGT-101",
+      "title": "Supervising People",
+      "status": "PUBLISHED",
+      "prereq": null
+    },
+    {
+      "code": "MGT-201",
+      "title": "Team Leadership",
+      "status": "PUBLISHED",
+      "prereq": "MGT-101"
+    },
+    {
+      "code": "MGT-202",
+      "title": "Budgeting for Managers",
+      "status": "PUBLISHED",
+      "prereq": {
+        "all": [
+          "MGT-101",
+          {
+            "any": [
+              "ACC-101",
+              "ACC-102"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "MGT-301",
+      "title": "Operations Management",
+      "status": "PUBLISHED",
+      "prereq": {
+        "any": [
+          "MGT-201",
+          "MGT-202"
+        ]
+      }
+    },
+    {
+      "code": "MGT-302",
+      "title": "Change Management",
+      "status": "PUBLISHED",
+      "prereq": "MGT-201"
+    },
+    {
+      "code": "MGT-401",
+      "title": "Strategic Planning",
+      "status": "PUBLISHED",
+      "prereq": {
+        "all": [
+          "MGT-301",
+          "MGT-302"
+        ]
+      }
+    },
+    {
+      "code": "PRJ-101",
+      "title": "Project Fundamentals",
+      "status": "PUBLISHED",
+      "prereq": null
+    },
+    {
+      "code": "PRJ-201",
+      "title": "Scheduling",
+      "status": "PUBLISHED",
+      "prereq": "PRJ-101"
+    },
+    {
+      "code": "PRJ-202",
+      "title": "Risk Management",
+      "status": "PUBLISHED",
+      "prereq": "PRJ-101"
+    },
+    {
+      "code": "PRJ-301",
+      "title": "Agile Delivery",
+      "status": "PUBLISHED",
+      "prereq": {
+        "any": [
+          "PRJ-201",
+          "PRJ-202",
+          "MGT-201"
+        ]
+      }
+    },
+    {
+      "code": "PRJ-302",
+      "title": "Stakeholder Management",
+      "status": "PUBLISHED",
+      "prereq": {
+        "all": [
+          "PRJ-201",
+          {
+            "any": [
+              "MGT-101",
+              "WRT-101"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "PRJ-401",
+      "title": "Program Management",
+      "status": "PUBLISHED",
+      "prereq": {
+        "all": [
+          "PRJ-301",
+          "PRJ-302"
+        ]
+      }
+    },
+    {
+      "code": "SEC-100",
+      "title": "Legacy Security Awareness",
+      "status": "RETIRED",
+      "prereq": null
+    },
+    {
+      "code": "SEC-101",
+      "title": "Security Awareness",
+      "status": "PUBLISHED",
+      "prereq": null
+    },
+    {
+      "code": "SEC-201",
+      "title": "Network Basics",
+      "status": "PUBLISHED",
+      "prereq": "SEC-101"
+    },
+    {
+      "code": "SEC-202",
+      "title": "Identity and Access",
+      "status": "PUBLISHED",
+      "prereq": "SEC-101"
+    },
+    {
+      "code": "SEC-301",
+      "title": "Incident Response",
+      "status": "PUBLISHED",
+      "prereq": {
+        "all": [
+          "SEC-201",
+          "SEC-202"
+        ]
+      }
+    },
+    {
+      "code": "SEC-302",
+      "title": "Cloud Security",
+      "status": "PUBLISHED",
+      "prereq": {
+        "all": [
+          "SEC-201",
+          {
+            "any": [
+              "DAT-102",
+              "PRJ-101"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "SEC-401",
+      "title": "Security Leadership",
+      "status": "PUBLISHED",
+      "prereq": {
+        "all": [
+          "SEC-301",
+          {
+            "any": [
+              "MGT-201",
+              "PRJ-301"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "code": "WRT-101",
+      "title": "Business Writing",
+      "status": "PUBLISHED",
+      "prereq": null
+    },
+    {
+      "code": "WRT-201",
+      "title": "Technical Writing",
+      "status": "PUBLISHED",
+      "prereq": "WRT-101"
+    },
+    {
+      "code": "WRT-202",
+      "title": "Report Writing",
+      "status": "PUBLISHED",
+      "prereq": {
+        "any": [
+          "WRT-101",
+          "DAT-101"
+        ]
+      }
+    },
+    {
+      "code": "WRT-301",
+      "title": "Documentation Systems",
+      "status": "PUBLISHED",
+      "prereq": {
+        "all": [
+          "WRT-201",
+          "WRT-202"
+        ]
+      }
+    }
+  ],
+  "equivalencies": [
+    {
+      "satisfies": "ACC-101",
+      "by": "ACC-100",
+      "reason": "EQUIVALENT_COURSE"
+    },
+    {
+      "satisfies": "SEC-101",
+      "by": "SEC-100",
+      "reason": "EQUIVALENT_COURSE"
+    }
+  ],
+  "certificates": [
+    {
+      "code": "CERT-BOOK",
+      "title": "Bookkeeping Certificate",
+      "courses": [
+        "ACC-101",
+        "ACC-102",
+        "ACC-201",
+        "ACC-202"
+      ]
+    },
+    {
+      "code": "CERT-ANALYST",
+      "title": "Data Analyst Certificate",
+      "courses": [
+        "DAT-101",
+        "DAT-102",
+        "DAT-201",
+        "DAT-202",
+        "DAT-301"
+      ]
+    },
+    {
+      "code": "CERT-DATA-ADV",
+      "title": "Advanced Analytics Certificate",
+      "courses": [
+        "DAT-401"
+      ]
+    },
+    {
+      "code": "CERT-LEAD",
+      "title": "Leadership Certificate",
+      "courses": [
+        "MGT-101",
+        "MGT-201",
+        "MGT-202",
+        "MGT-301"
+      ]
+    },
+    {
+      "code": "CERT-PM",
+      "title": "Project Management Certificate",
+      "courses": [
+        "PRJ-101",
+        "PRJ-201",
+        "PRJ-202",
+        "PRJ-301",
+        "PRJ-302"
+      ]
+    },
+    {
+      "code": "CERT-SEC",
+      "title": "Security Operations Certificate",
+      "courses": [
+        "SEC-101",
+        "SEC-201",
+        "SEC-202",
+        "SEC-301"
+      ]
+    },
+    {
+      "code": "CERT-WRITE",
+      "title": "Professional Writing Certificate",
+      "courses": [
+        "WRT-101",
+        "WRT-201",
+        "WRT-202",
+        "WRT-301"
+      ]
+    }
+  ],
+  "hash": "32978f4b386ea7ce1fdf1018f67633def259d08808c501cdedea84c849197e8d"
+}

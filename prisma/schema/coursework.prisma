@@ -1,0 +1,286 @@
+// CLONE-OWNED (foundation-drift CLONE_OWNED): Coursework's own tables. Phase 2, task 2.1.
+//
+// Rules this file keeps:
+//   - Days are CHAR(10) calendar strings, never a Postgres DATE (D-8; engine:lint bans the Prisma DATE attribute here).
+//   - Progress, eligibility and grades are never stored (P1): no column of any table holds a
+//     progress, percent, eligible, final grade, letter or pass value. tests/course/schema.test.ts asserts it.
+//   - CatalogVersion, PublishAttempt, CompletionEvent, ItemCompletion and Submission are append-only
+//     by trigger (hand-written SQL in the migration, D-45). Their Org relation is Restrict, not Cascade:
+//     a cascade would hit the trigger and fail at runtime (Bookable's lesson), so an org with history
+//     cannot be deleted through the app (recorded as a seam).
+//   - A catalog version's content is the whole {courses, equivalencies, certificates} JSON and its
+//     hash is catalogHash(content) (V1, D-43). There are no normalised Course rows in Phase 2.
+//   - Every write names its actor (actorUserId, no FK, like AuditEvent) and, where it applies, the
+//     catalog version (V2).
+
+enum CompletionKind {
+  PASS
+  FAIL
+}
+
+enum EnrollmentStatus {
+  IN_PROGRESS
+  COMPLETED
+}
+
+/// V1: immutable, content-hashed. `content` = {courses, equivalencies, certificates}; `hash` = SHA-256 of its canonical JSON.
+model CatalogVersion {
+  id            String   @id @default(uuid()) @db.Uuid
+  orgId         String   @db.Uuid
+  org           Org      @relation(fields: [orgId], references: [id], onDelete: Restrict)
+  label         String // "cat-v1"; outside the hash
+  hash          String   @db.Char(64)
+  content       Json
+  parentId      String?  @db.Uuid // the version the accepted edit was applied to; null for the first
+  parent        CatalogVersion?  @relation("CatalogVersionParent", fields: [parentId], references: [id], onDelete: Restrict)
+  children      CatalogVersion[] @relation("CatalogVersionParent")
+  actorUserId   String?  @db.Uuid // no FK: survives user deletion
+  createdAt     DateTime @default(now()) @db.Timestamptz(6)
+
+  publishAttempts PublishAttempt[]
+  learners        Learner[]
+  completions     CompletionEvent[]
+  cohorts         Cohort[]
+  enrollments     Enrollment[]
+  drafts          CatalogDraft[]
+
+  @@unique([orgId, label])
+  @@index([orgId, createdAt])
+}
+
+/// G5: every publish attempt, accepted or refused, with the engine's full verdict. Append-only.
+model PublishAttempt {
+  id              String   @id @default(uuid()) @db.Uuid
+  orgId           String   @db.Uuid
+  org             Org      @relation(fields: [orgId], references: [id], onDelete: Restrict)
+  fromVersionId   String   @db.Uuid
+  fromVersion     CatalogVersion @relation(fields: [fromVersionId], references: [id], onDelete: Restrict)
+  edit            Json // the DraftEdit as submitted
+  result          String // "ACCEPT" | "REJECT:<code>"
+  errors          Json // PublishError[]
+  cycles          Json // Code[][]
+  grandfathered   Json // Grandfathered[] (G9 report), [] on a refusal
+  resultVersionId String?  @db.Uuid // the version written, on ACCEPT only (no relation: one-way pointer, set in the same transaction)
+  actorUserId     String?  @db.Uuid
+  createdAt       DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([orgId, createdAt])
+}
+
+/// A learner of the school. Optionally a foundation User (D-42); the fixtures' learners have none.
+model Learner {
+  id                String   @id @default(uuid()) @db.Uuid
+  orgId             String   @db.Uuid
+  org               Org      @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  code              String // "L-0001"
+  name              String
+  email             String
+  targetCertificate String // certificate code in the enrolled version
+  enrolledVersionId String   @db.Uuid // P2: the version eligibility is read against
+  enrolledVersion   CatalogVersion @relation(fields: [enrolledVersionId], references: [id], onDelete: Restrict)
+  userId            String?  @db.Uuid
+  user              User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt         DateTime @default(now()) @db.Timestamptz(6)
+
+  waivers     Waiver[]
+  completions CompletionEvent[]
+  enrollments Enrollment[]
+  itemCompletions ItemCompletion[]
+  submissions Submission[]
+
+  @@unique([orgId, code])
+  @@unique([orgId, userId]) // D-51: one learner per user per org (NULLs are distinct: unlinked learners are unconstrained)
+}
+
+/// G6: a leaf satisfied by WAIVER:<reason>. Day is the calendar day granted (CHAR(10)).
+model Waiver {
+  id          String   @id @default(uuid()) @db.Uuid
+  orgId       String   @db.Uuid
+  org         Org      @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  learnerId   String   @db.Uuid
+  learner     Learner  @relation(fields: [learnerId], references: [id], onDelete: Cascade)
+  course      String
+  reason      String // WaiverReason (closed vocabulary, checked at the write)
+  grantedDay  String   @db.Char(10)
+  grantedBy   String
+  actorUserId String?  @db.Uuid
+  createdAt   DateTime @default(now()) @db.Timestamptz(6)
+
+  @@unique([learnerId, course])
+  @@index([orgId])
+}
+
+/// V2: a PASS or FAIL of a course on a calendar day, evaluated under a catalog version. Append-only.
+model CompletionEvent {
+  id               String         @id @default(uuid()) @db.Uuid
+  orgId            String         @db.Uuid
+  org              Org            @relation(fields: [orgId], references: [id], onDelete: Restrict)
+  learnerId        String         @db.Uuid
+  learner          Learner        @relation(fields: [learnerId], references: [id], onDelete: Restrict)
+  course           String
+  kind             CompletionKind
+  day              String         @db.Char(10)
+  catalogVersionId String         @db.Uuid
+  catalogVersion   CatalogVersion @relation(fields: [catalogVersionId], references: [id], onDelete: Restrict)
+  actorUserId      String?        @db.Uuid
+  createdAt        DateTime       @default(now()) @db.Timestamptz(6)
+
+  @@index([orgId, learnerId, course])
+}
+
+/// A run of a course with a drip schedule (R1) and, optionally, a grade scheme.
+model Cohort {
+  id               String         @id @default(uuid()) @db.Uuid
+  orgId            String         @db.Uuid
+  org              Org            @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  code             String // "C-ACC101-F26"
+  course           String
+  startDay         String         @db.Char(10)
+  schemeId         String?        @db.Uuid
+  scheme           GradeScheme?   @relation(fields: [schemeId], references: [id], onDelete: Restrict)
+  catalogVersionId String         @db.Uuid
+  catalogVersion   CatalogVersion @relation(fields: [catalogVersionId], references: [id], onDelete: Restrict)
+  createdAt        DateTime       @default(now()) @db.Timestamptz(6)
+
+  items           ContentItem[]
+  enrollments     Enrollment[]
+  itemCompletions ItemCompletion[]
+  assignments     Assignment[]
+  submissions     Submission[]
+
+  @@unique([orgId, code])
+}
+
+/// R1: released on startDay + offsetDays, inclusive.
+model ContentItem {
+  id         String @id @default(uuid()) @db.Uuid
+  cohortId   String @db.Uuid
+  cohort     Cohort @relation(fields: [cohortId], references: [id], onDelete: Cascade)
+  code       String // "L01"
+  title      String @default("")
+  offsetDays Int
+
+  @@unique([cohortId, code])
+}
+
+/// V2/V3: carries the version it was evaluated under and the G9 flag. No progress column (P1).
+model Enrollment {
+  id                   String           @id @default(uuid()) @db.Uuid
+  orgId                String           @db.Uuid
+  org                  Org              @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  cohortId             String           @db.Uuid
+  cohort               Cohort           @relation(fields: [cohortId], references: [id], onDelete: Cascade)
+  learnerId            String           @db.Uuid
+  learner              Learner          @relation(fields: [learnerId], references: [id], onDelete: Cascade)
+  status               EnrollmentStatus @default(IN_PROGRESS)
+  catalogVersionId     String           @db.Uuid
+  catalogVersion       CatalogVersion   @relation(fields: [catalogVersionId], references: [id], onDelete: Restrict)
+  grandfathered        Boolean          @default(false)
+  grandfatheredMissing String? // "+"-joined missing set from the G9 report that flagged it
+  createdAt            DateTime         @default(now()) @db.Timestamptz(6)
+
+  @@unique([cohortId, learnerId])
+  @@index([orgId, learnerId])
+}
+
+/// R2/P1: an ACCEPTED item completion. A refused one writes an AuditEvent and no row here (D-46). Append-only.
+model ItemCompletion {
+  id          String   @id @default(uuid()) @db.Uuid
+  orgId       String   @db.Uuid
+  org         Org      @relation(fields: [orgId], references: [id], onDelete: Restrict)
+  cohortId    String   @db.Uuid
+  cohort      Cohort   @relation(fields: [cohortId], references: [id], onDelete: Restrict)
+  learnerId   String   @db.Uuid
+  learner     Learner  @relation(fields: [learnerId], references: [id], onDelete: Restrict)
+  itemCode    String
+  day         String   @db.Char(10)
+  eventRef    String? // the caller's own id for the event (fixture event_id), for replay audits
+  actorUserId String?  @db.Uuid
+  createdAt   DateTime @default(now()) @db.Timestamptz(6)
+
+  @@unique([cohortId, learnerId, itemCode])
+  @@index([orgId, learnerId])
+}
+
+/// S1: a scheme as data; `hash` = SHA-256 of canonical(content). Only an ACCEPT scheme may be attached to a cohort.
+model GradeScheme {
+  id        String   @id @default(uuid()) @db.Uuid
+  orgId     String   @db.Uuid
+  org       Org      @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  code      String // "SCH-STD"
+  content   Json
+  status    String // DRAFT | PUBLISHED | RETIRED
+  hash      String   @db.Char(64)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+
+  cohorts Cohort[]
+
+  @@unique([orgId, code])
+}
+
+model Assignment {
+  id             String  @id @default(uuid()) @db.Uuid
+  cohortId       String  @db.Uuid
+  cohort         Cohort  @relation(fields: [cohortId], references: [id], onDelete: Cascade)
+  code           String // "HW1"
+  category       String
+  pointsPossible Int
+  dueDay         String  @db.Char(10)
+  extraCredit    Boolean @default(false)
+
+  submissions Submission[]
+
+  @@unique([cohortId, code])
+}
+
+/// S2: a score in hp on a calendar day. A correction is a new row with `supersedesId` and a reason;
+/// "current" is derived (the row nobody supersedes). Append-only.
+model Submission {
+  id           String     @id @default(uuid()) @db.Uuid
+  orgId        String     @db.Uuid
+  org          Org        @relation(fields: [orgId], references: [id], onDelete: Restrict)
+  cohortId     String     @db.Uuid
+  cohort       Cohort     @relation(fields: [cohortId], references: [id], onDelete: Restrict)
+  learnerId    String     @db.Uuid
+  learner      Learner    @relation(fields: [learnerId], references: [id], onDelete: Restrict)
+  assignmentId String     @db.Uuid
+  assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Restrict)
+  scoreHp      Int
+  submittedDay String     @db.Char(10)
+  supersedesId String?    @unique @db.Uuid
+  supersedes   Submission? @relation("SubmissionSupersedes", fields: [supersedesId], references: [id], onDelete: Restrict)
+  supersededBy Submission? @relation("SubmissionSupersedes")
+  reason       String?
+  actorUserId  String?    @db.Uuid
+  createdAt    DateTime   @default(now()) @db.Timestamptz(6)
+
+  @@index([cohortId, learnerId])
+}
+
+/// D-56: an org with append-only history is archived, never deleted. Insert-only (append-only trigger); one row per org.
+/// While a row exists every clone write path refuses (src/course/archive.ts, and the coursework_refuse_archived trigger).
+model OrgArchive {
+  id         String   @id @default(uuid()) @db.Uuid
+  orgId      String   @unique @db.Uuid
+  org        Org      @relation(fields: [orgId], references: [id], onDelete: Restrict)
+  archivedAt DateTime @default(now()) @db.Timestamptz(6)
+  archivedBy String?  @db.Uuid // no FK: survives user deletion, like AuditEvent.actorUserId
+  reason     String
+}
+
+/// D-52: one in-progress catalog edit per editor. Mutable and outside the append-only tables; publishing it
+/// still goes only through publishEdit (G5). `ops` is a DraftEdit's operation list.
+model CatalogDraft {
+  id            String         @id @default(uuid()) @db.Uuid
+  orgId         String         @db.Uuid
+  org           Org            @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  editorUserId  String         @db.Uuid
+  editor        User           @relation(fields: [editorUserId], references: [id], onDelete: Cascade)
+  baseVersionId String         @db.Uuid
+  baseVersion   CatalogVersion @relation(fields: [baseVersionId], references: [id], onDelete: Restrict)
+  ops           Json // EditOp[]
+  createdAt     DateTime       @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime       @updatedAt @db.Timestamptz(6)
+
+  @@unique([orgId, editorUserId])
+}

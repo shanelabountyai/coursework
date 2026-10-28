@@ -17,7 +17,8 @@ jobs:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/coursework_test?connection_limit=10&pool_timeout=20
       DIRECT_URL: postgresql://postgres:postgres@localhost:5432/coursework_test?connection_limit=10&pool_timeout=20
       AUTH_SECRET: ci-only-secret-not-for-real-use-0123456789abc
-      APP_URL: http://localhost:6400
+      APP_URL: http://localhost:7400
+      TZ: America/Chicago # D-8: a non-UTC process zone so a Date-based day path would shift here, not just on a laptop
     services:
       postgres:
         image: postgres:17
@@ -33,6 +34,8 @@ jobs:
           --health-retries=5
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # foundation:drift diffs against the v1.3.0 tag; a shallow checkout has no tags
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -40,9 +43,29 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
+      # Coursework gate (docs/phase-1-tasks.md 1.12): engine purity and date bans, then the oracle agreement, then the
+      # fixture freeze — fixtures:check runs AFTER course:eval so a product-code write into fixtures/ fails the tree check.
+      - run: npm run foundation:drift
+      - run: npm run engine:lint
+      - run: npm run course:eval
+      - run: npm run progress:verify
+      - run: npm run fixtures:check
       - run: createdb coursework_test
       - run: npx prisma migrate deploy
+      # Phase 2 (task 2.11): the clone's migration SQL is hand-written (the sandbox has no schema engine), so
+      # prove the applied database equals the Prisma schema — any column, index or FK the SQL got wrong fails
+      # here. The output goes into the error annotation too: the cloud build session can read annotations
+      # through the API but not job logs.
+      - run: |
+          set +e
+          npx prisma migrate diff --from-config-datasource --to-schema prisma/schema --exit-code --script > migrate-diff.sql 2>&1
+          rc=$?
+          if [ $rc -ne 0 ]; then echo "::error::migrate diff rc=$rc: $(head -c 3500 migrate-diff.sql | tr '\n' ' ')"; cat migrate-diff.sql; exit 1; fi
       - run: npx vitest run
+      # Task 2.8 / 2.9 as commands: seed fixtures/ through the write paths into the runner's database, then
+      # recompute 341 + 300 progress values from its rows and diff the oracle's answers (0 diffs).
+      - run: npx tsx scripts/seed-fixtures.ts --slug ci-fixtures
+      - run: npx tsx scripts/progress-verify.ts --db --slug ci-fixtures
       # Production build, served — the way it ships. login.spec.ts drives a real page.
       - run: npx playwright install --with-deps chromium
       - run: npx playwright test
