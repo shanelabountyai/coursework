@@ -2,6 +2,8 @@
 
 ## ▶ Nothing queued
 
+**2026-11-09: upgraded to foundation v1.6.2** (branch `foundation-v1.6.2`). No migration. CI enforce leg takes the template's DB-name lines (F-14); `tests/unit/foundation-tools.test.ts` module-guard assertion relaxed for a clone that removed billing (F-17). Gate: typecheck, lint, 415 unit pass / 32 skipped, drift clean, build:test ok, audit 0.
+
 All closed 2026-10-28: PR #1 and #2 merged, template v1.4.0 tagged (template and coursework), D-58 closed, CI green on main (run 40615944053: ci + modules-removed). Pick a new item only if Shane names one.
 
 ## Previous: closure deliverables (all done)
