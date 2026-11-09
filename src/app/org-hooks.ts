@@ -1,6 +1,8 @@
 import { db } from '@/core/db';
 import { Refused } from '@/core/errors';
+import { revokeKeysCreatedBy } from '@/modules/apikeys/keys'; // apikeys
 import type { ListedOrg } from '@/core/tenancy/listed';
+import type { MembershipEnded } from '@/core/tenancy/orgs';
 import { deletionBlocker } from '@/course/archive';
 
 // Clone-owned, like cron-jobs.ts: what must happen before an org is deleted. Throwing stops the
@@ -24,3 +26,10 @@ export async function filterListedOrgs(_userId: string, orgs: readonly ListedOrg
   const hidden = new Set(archived.map((a) => a.orgId));
   return orgs.filter((o) => !hidden.has(o.id));
 }
+
+// Clone-owned (v1.6.0): what ends with a membership (removed, left, or account deleted), in the same transaction. The
+// template revokes the API keys the person created (owner decision 2026-11-05, like K6's share links). A clone adds its
+// own per-person credentials here. Throwing stops the removal.
+export const onMembershipEnded: MembershipEnded = async (tx, orgId, userId) => {
+  await revokeKeysCreatedBy(tx, orgId, userId); // apikeys
+};

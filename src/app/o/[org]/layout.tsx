@@ -24,7 +24,10 @@ export default async function OrgLayout({ children, params }: { children: React.
         {(staff || me) && <> · <NavLink href={`${base}/cohorts`}>Cohorts</NavLink></>}
         {me && <> · <NavLink href={`${base}/me`}>My path</NavLink></>}
         {' · '}<NavLink href={`${base}/settings/members`}>Members</NavLink>
-        {can(ctx.role, 'org.delete') && <> · <NavLink href={`${base}/archive`}>Archive</NavLink> · <NavLink href={`${base}/settings/danger`}>Delete org</NavLink></>}
+        {can(ctx.role, 'audit.read') && <> · <NavLink href={`${base}/settings/audit`}>Audit log</NavLink> · <NavLink href={`${base}/settings/security`}>Security</NavLink></>}
+        {ctx.role === 'owner' && <> · <NavLink href={`${base}/settings/sso`}>SSO</NavLink></>} {/* sso */}
+        {can(ctx.role, 'apikeys.manage') && <> · <NavLink href={`${base}/settings/apikeys`}>API keys</NavLink></>} {/* apikeys */}
+        {can(ctx.role, 'org.delete') && <> · <NavLink href={`${base}/archive`}>Archive</NavLink> · <NavLink href={`${base}/settings/danger`}>Export or delete</NavLink></>}
         {' · '}<Link href="/orgs">Your orgs</Link> · <Link href="/account/security">Account</Link>
       </nav>
       <ArchivedNote archived={archived} />
