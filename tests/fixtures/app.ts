@@ -49,3 +49,11 @@ export async function seedApp(org: { orgId: string; userId: string }, key: 'a' |
   void org.userId;
   return { catalogVersion: ids.catalogVersion, learner: ids.learner, cohort: ids.cohort, assignment: ids.assignment, submission: ids.submission };
 }
+
+// CLONE-OWNED. The clone's models with no orgId column, i.e. outside tenancy and RLS on purpose (INV-42, v1.7.0). Name
+// each one with a comment saying why; a model without orgId that is not here (or in core's list) fails INV-42.
+export const GLOBAL_MODELS: readonly string[] = [
+  // v1.7.0 rollout: listed as found (INV-42). The reason is read from the schema; confirm or give the model an orgId.
+  'ContentItem', // org-owned through Cohort; outside RLS and the org export
+  'Assignment', // org-owned through Cohort; outside RLS and the org export
+];
